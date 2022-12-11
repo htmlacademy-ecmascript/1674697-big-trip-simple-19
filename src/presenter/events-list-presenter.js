@@ -1,5 +1,5 @@
 import EventsListView from '../view/events-list-view';
-// import FormNewEventView from '../view/form-new-event-view.js';
+import FormNewEventView from '../view/form-new-event-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventsListItemView from '../view/events-list-item-view.js';
 import {render} from '../render.js';
@@ -15,8 +15,8 @@ export default class EventsListPresenter {
 
   init() {
     render(this.eventsListComponent, this.eventsListContainer);
-    // render(new FormNewEventView(), this.eventsListComponent.getElement());
     render(new FormEditEventView(), this.eventsListComponent.getElement());
+    render(new FormNewEventView(), this.eventsListComponent.getElement());
 
     for (let i = 0; i < ITEMS_COUNT; i++) {
       render(new EventsListItemView(), this.eventsListComponent.getElement());
