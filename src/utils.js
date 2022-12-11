@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -12,13 +14,8 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-export {getRandomArrayElement, getRandomInteger};
+function humanizeEventDueDate(dueDate, dateFormat) {
+  return dueDate ? dayjs(dueDate).format(dateFormat) : '';
+}
 
-
-// const getDateFormat = ((date) => dayjs(date).format('YYYY/MM/DD HH:mm'));
-// const getDateISO = ((date) => dayjs(date).format('YYYY-MM-DDTHH:mm'));
-// const getDateHoursMinutes = ((date) => dayjs(date).format('HH:mm'));
-// const getDateMonthDay = ((date) => dayjs(date).format('MMM DD'));
-
-
-// export {getRandomInteger, getRandomArray, getDateFormat, getDateISO, getDateHoursMinutes, getDateMonthDay};
+export { getRandomArrayElement, getRandomInteger, humanizeEventDueDate };

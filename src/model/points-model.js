@@ -1,9 +1,9 @@
-import {getRandomPoint} from '../mock/point.js';
+import { getRandomPoint } from '../mock/point.js';
 
-const ITEMS_COUNT = 3;
+const TASK_COUNT = 3;
 
 export default class PointsModel {
-  points = Array.from({length: ITEMS_COUNT}, getRandomPoint);
+  points = Array.from({ length: TASK_COUNT }, getRandomPoint);
 
   getPoints() {
     return this.points;

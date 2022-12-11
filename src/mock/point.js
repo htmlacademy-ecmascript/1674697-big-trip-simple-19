@@ -1,10 +1,10 @@
 import dayjs from 'dayjs';
-import {getRandomArrayElement, getRandomInteger} from '../utils.js';
-import {OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION} from '../const.js';
+import { getRandomArrayElement, getRandomInteger } from '../utils.js';
+import { OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
 
 const mockDestination = [
   {
-    id: 1,
+    id: 0,
     description: getRandomArrayElement(DESCRIPTION),
     name: getRandomArrayElement(CITIES),
     pictures: [
@@ -101,30 +101,102 @@ function getRandomOffers() {
 
 const mockOffersByType = {
   type: getRandomArrayElement(OFFER_TYPE),
-  offers: Array.from({length: 5}, getRandomOffers),
+  offers: Array.from({ length: 5 }, getRandomOffers),
 };
 
 const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
 const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
 
-const mockPoint = {
-  basePrice: getRandomInteger(120, 1000),
-  dateFrom: startTime,
-  dateTo: endTime,
-  id: '0',
-  destination:  mockDestination,
-  offers:  mockOffersByType.offers,
-  type: mockOffersByType.type
-};
-
-console.log(mockPoint);
+const mockPoint = [
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '0',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'taxi'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '1',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'bus'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '2',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'train'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '3',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'ship'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '4',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'drive'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '5',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'flight'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '6',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'check-in'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '7',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'sightseeing'
+  },
+  {
+    basePrice: getRandomInteger(120, 1000),
+    dateFrom: startTime,
+    dateTo: endTime,
+    id: '8',
+    destination: mockDestination,
+    offers: mockOffersByType.offers,
+    type: 'restaurant'
+  }
+];
 
 const mockLocalPoint = {
   basePrice: getRandomInteger(120, 1000),
   dateFrom: startTime,
   dateTo: endTime,
-  destination:  mockDestination,
-  offers:  mockOffersByType.offers,
+  destination: mockDestination,
+  offers: mockOffersByType.offers,
   type: mockOffersByType.type
 };
 
@@ -142,5 +214,5 @@ function getRandomPoint() {
   return getRandomArrayElement(mockPoint);
 }
 
-export {getRandomPoint};
+export { getRandomPoint };
 
