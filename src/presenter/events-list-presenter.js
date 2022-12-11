@@ -1,25 +1,26 @@
-import EventsListView from '../view/events-list-view';
+import EventListView from '../view/event-list-view';
 import FormNewEventView from '../view/form-new-event-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
-import EventsListItemView from '../view/events-list-item-view.js';
+import EventListItemView from '../view/event-list-item-view.js';
 import {render} from '../render.js';
 
-const ITEMS_COUNT = 3;
+export default class EventListPresenter {
+  eventListComponent = new EventListView();
 
-export default class EventsListPresenter {
-  eventsListComponent = new EventsListView();
-
-  constructor({eventsListContainer}) {
-    this.eventsListContainer = eventsListContainer;
+  constructor({eventListContainer, pointsModel}) {
+    this.eventListContainer = eventListContainer;
+    this.pointsModel = pointsModel;
   }
 
   init() {
-    render(this.eventsListComponent, this.eventsListContainer);
-    render(new FormEditEventView(), this.eventsListComponent.getElement());
-    render(new FormNewEventView(), this.eventsListComponent.getElement());
+    this.eventPoints = [...this.pointsModel.getPoints()];
 
-    for (let i = 0; i < ITEMS_COUNT; i++) {
-      render(new EventsListItemView(), this.eventsListComponent.getElement());
+    render(this.eventListComponent, this.eventListContainer);
+    render(new FormEditEventView(), this.eventListComponent.getElement());
+    render(new FormNewEventView(), this.eventListComponent.getElement());
+
+    for (let i = 0; i < this.eventPoints.length; i++) {
+      render(new EventListItemView({point: this.eventPoints[i]}), this.eventListComponent.getElement());
     }
   }
 }

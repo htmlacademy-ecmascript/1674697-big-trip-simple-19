@@ -15,15 +15,6 @@ const getRandomInteger = (a = 0, b = 1) => {
 export {getRandomArrayElement, getRandomInteger};
 
 
-
-
-
-// const getRandomArray = (arr) => {
-//   const results = [];
-//   results.push(arr.slice(0, Math.ceil(Math.random() * arr.length)));
-//   return results;
-// };
-
 // const getDateFormat = ((date) => dayjs(date).format('YYYY/MM/DD HH:mm'));
 // const getDateISO = ((date) => dayjs(date).format('YYYY-MM-DDTHH:mm'));
 // const getDateHoursMinutes = ((date) => dayjs(date).format('HH:mm'));
