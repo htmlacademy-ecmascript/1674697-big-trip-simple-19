@@ -1,5 +1,6 @@
-import {getRandomArrayElement} from '../utils.js';
-import {OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS} from '../const.js';
+import dayjs from 'dayjs';
+import {getRandomArrayElement, getRandomInteger} from '../utils.js';
+import {OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION} from '../const.js';
 
 const mockDestination = [
   {
@@ -7,6 +8,22 @@ const mockDestination = [
     description: getRandomArrayElement(DESCRIPTION),
     name: getRandomArrayElement(CITIES),
     pictures: [
+      {
+        src: getRandomArrayElement(PHOTOS),
+        description: getRandomArrayElement(DESCRIPTION)
+      },
+      {
+        src: getRandomArrayElement(PHOTOS),
+        description: getRandomArrayElement(DESCRIPTION)
+      },
+      {
+        src: getRandomArrayElement(PHOTOS),
+        description: getRandomArrayElement(DESCRIPTION)
+      },
+      {
+        src: getRandomArrayElement(PHOTOS),
+        description: getRandomArrayElement(DESCRIPTION)
+      },
       {
         src: getRandomArrayElement(PHOTOS),
         description: getRandomArrayElement(DESCRIPTION)
@@ -87,102 +104,28 @@ const mockOffersByType = {
   offers: Array.from({length: 5}, getRandomOffers),
 };
 
-const mockPoint = [
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '0',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'bus'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '1',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'taxi'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '2',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'train'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '3',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'ship'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '4',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'drive'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '5',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'flight'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '6',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'check-in'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '7',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'sightseeing'
-  },
-  {
-    base_price: 1100,
-    // date_from: '2019-07-10T22:55:56.845Z',
-    // date_to: '2019-07-11T11:22:13.375Z',
-    id: '8',
-    destination:  mockDestination,
-    offers:  Array.from({length: 5}, getRandomOffers),
-    type: 'restaurant'
-  }
-];
+const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
+const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
+
+const mockPoint = {
+  basePrice: getRandomInteger(120, 1000),
+  dateFrom: startTime,
+  dateTo: endTime,
+  id: '0',
+  destination:  mockDestination,
+  offers:  mockOffersByType.offers,
+  type: mockOffersByType.type
+};
 
 console.log(mockPoint);
 
 const mockLocalPoint = {
-  base_price: 222,
-  // date_from: '2019-07-10T22:55:56.845Z',
-  // date_to: '2019-07-11T11:22:13.375Z',
-  // destination: $Destination.id$,
-  // offers: $Array<Offer.id>$,
-  // type: 'taxi'
+  basePrice: getRandomInteger(120, 1000),
+  dateFrom: startTime,
+  dateTo: endTime,
   destination:  mockDestination,
-  offers:  Array.from({length: 5}, getRandomOffers),
-  type: getRandomArrayElement(OFFER_TYPE),
+  offers:  mockOffersByType.offers,
+  type: mockOffersByType.type
 };
 
 const mockAuthorizationError = {

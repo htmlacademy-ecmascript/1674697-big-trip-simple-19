@@ -38,6 +38,20 @@ const PHOTOS = [
   'https://loremflickr.com/248/152?random=118',
   'https://loremflickr.com/248/152?random=73',
   'https://loremflickr.com/248/152?random=152',
+  'https://loremflickr.com/248/152?random=154',
+  'https://loremflickr.com/248/152?random=350',
+  'https://loremflickr.com/248/152?random=18',
+  'https://loremflickr.com/248/152?random=93',
+  'https://loremflickr.com/248/152?random=172',
+  'https://loremflickr.com/248/152?random=194',
+  'https://loremflickr.com/248/152?random=450',
+  'https://loremflickr.com/248/152?random=109',
+  'https://loremflickr.com/248/152?random=403',
+  'https://loremflickr.com/248/152?random=32'
 ];
 
-export {OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS};
+const HOURS_GAP = 24;
+const MIN_EVENT_DURATION = 1; // 1 час
+const MAX_EVENT_DURATION = 168; // 7 дней в часах
+
+export {OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION};
