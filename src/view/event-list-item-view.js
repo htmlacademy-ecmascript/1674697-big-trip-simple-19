@@ -2,7 +2,7 @@ import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
 
 function createEventListItemTemplate(point) {
-  const { basePrice, name, type, offers, dateFrom, dateTo } = point;
+  const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
   const timeStart = humanizeEventDueDate(dateFrom, 'HH:mm');
@@ -10,11 +10,11 @@ function createEventListItemTemplate(point) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const createOfferElement = (offer) =>
+  const createOfferElement = (offers) =>
     `<li class="event__offer">
-      <span class="event__offer-title">${offer.title}</span>
+      <span class="event__offer-title">${offers.title}</span>
       &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offer.price}</span>
+      <span class="event__offer-price">${offers.price}</span>
     </li>`;
 
   const offersList = offers.map((item) => createOfferElement(item)).join(' ');
@@ -26,7 +26,7 @@ function createEventListItemTemplate(point) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${name}</h3>
+        <h3 class="event__title">${type} ${destination.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>

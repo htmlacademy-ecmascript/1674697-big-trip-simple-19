@@ -1,97 +1,140 @@
 import dayjs from 'dayjs';
 import { getRandomArrayElement, getRandomInteger } from '../utils.js';
-import { OFFER_TYPE, CITIES, DESCRIPTION, PHOTOS, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+import { OFFER_TYPE, DESCRIPTION, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+
+const generatePhotoOfDestination = () => {
+  const photosNumber = getRandomInteger(1, 200);
+  return {
+    src: `https://loremflickr.com/248/152?random=${photosNumber}`,
+    description: 'Some beautiful place',
+  };
+};
+
+const getPhotoOfDestination = function () {
+  return new Array(getRandomInteger(0, 5)).fill().map(() => generatePhotoOfDestination());
+};
 
 const mockDestination = [
   {
     id: 0,
     description: getRandomArrayElement(DESCRIPTION),
-    name: getRandomArrayElement(CITIES),
-    pictures: [
-      {
-        src: getRandomArrayElement(PHOTOS),
-        description: getRandomArrayElement(DESCRIPTION)
-      },
-      {
-        src: getRandomArrayElement(PHOTOS),
-        description: getRandomArrayElement(DESCRIPTION)
-      },
-      {
-        src: getRandomArrayElement(PHOTOS),
-        description: getRandomArrayElement(DESCRIPTION)
-      },
-      {
-        src: getRandomArrayElement(PHOTOS),
-        description: getRandomArrayElement(DESCRIPTION)
-      },
-      {
-        src: getRandomArrayElement(PHOTOS),
-        description: getRandomArrayElement(DESCRIPTION)
-      }
-    ]
+    name: 'Venice',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 1,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Florence',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 2,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Lucca',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 3,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Pisa',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 4,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Volterra',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 5,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Siena',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 6,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Milan',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 7,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Verona',
+    pictures: getPhotoOfDestination()
+  },
+  {
+    id: 8,
+    description: getRandomArrayElement(DESCRIPTION),
+    name: 'Rim',
+    pictures: getPhotoOfDestination()
   }
 ];
+
+function getRandomDestination() {
+  return getRandomArrayElement(mockDestination);
+}
 
 const mockOffer = [
   {
     id: 0,
     title: 'Upgrade to a business class',
-    price: 120
+    price: 120,
   },
   {
     id: 1,
     title: 'Book tickets',
-    price: 40
+    price: 40,
   },
   {
     id: 2,
     title: 'Lunch in city',
-    price: 30
+    price: 30,
   },
   {
     id: 3,
     title: 'Order Uber',
-    price: 50
+    price: 50,
   },
   {
     id: 4,
     title: 'Add breakfast',
-    price: 50
+    price: 50,
   },
   {
     id: 5,
     title: 'Rent a car',
-    price: 200
+    price: 200,
   },
   {
     id: 6,
     title: 'Switch to comfort',
-    price: 80
+    price: 80,
   },
   {
     id: 7,
     title: 'Add luggage',
-    price: 30
+    price: 30,
   },
   {
     id: 8,
     title: 'Switch to comfort class',
-    price: 100
+    price: 100,
   },
   {
     id: 9,
     title: 'Add meal',
-    price: 15
+    price: 15,
   },
   {
     id: 10,
     title: 'Choose seats',
-    price: 5
+    price: 5,
   },
   {
     id: 11,
     title: 'Travel by train',
-    price: 40
+    price: 40,
   }
 ];
 
@@ -101,7 +144,7 @@ function getRandomOffers() {
 
 const mockOffersByType = {
   type: getRandomArrayElement(OFFER_TYPE),
-  offers: Array.from({ length: 5 }, getRandomOffers),
+  offers: Array.from({ length: getRandomInteger(0, 5) }, getRandomOffers),
 };
 
 const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
@@ -113,7 +156,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '0',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'taxi'
   },
@@ -122,7 +165,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '1',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'bus'
   },
@@ -131,7 +174,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '2',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'train'
   },
@@ -140,7 +183,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '3',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'ship'
   },
@@ -149,7 +192,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '4',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'drive'
   },
@@ -158,7 +201,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '5',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'flight'
   },
@@ -167,7 +210,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '6',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'check-in'
   },
@@ -176,7 +219,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '7',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'sightseeing'
   },
@@ -185,34 +228,14 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: '8',
-    destination: mockDestination,
+    destination: getRandomDestination(),
     offers: mockOffersByType.offers,
     type: 'restaurant'
   }
 ];
-
-const mockLocalPoint = {
-  basePrice: getRandomInteger(120, 1000),
-  dateFrom: startTime,
-  dateTo: endTime,
-  destination: mockDestination,
-  offers: mockOffersByType.offers,
-  type: mockOffersByType.type
-};
-
-const mockAuthorizationError = {
-  error: 401,
-  message: 'Header Authorization is not correct'
-};
-
-const mockNotFoundError = {
-  error: 404,
-  message: 'Not found'
-};
 
 function getRandomPoint() {
   return getRandomArrayElement(mockPoint);
 }
 
 export { getRandomPoint };
-
