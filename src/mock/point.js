@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { getRandomArrayElement, getRandomInteger } from '../utils.js';
-import { OFFER_TYPE, DESCRIPTION, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+import { DESCRIPTION, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
 
 const generatePhotoOfDestination = () => {
   const photosNumber = getRandomInteger(1, 200);
@@ -71,9 +71,9 @@ const mockDestination = [
   }
 ];
 
-function getRandomDestination() {
-  return getRandomArrayElement(mockDestination);
-}
+// function getRandomDestination() {
+//   return getRandomArrayElement(mockDestination);
+// }
 
 const mockOffer = [
   {
@@ -292,8 +292,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 0,
-    destination: getRandomDestination(),
-    offers: [0, 1],
+    destination: 1,
+    offers: [1],
     type: 'taxi'
   },
   {
@@ -301,7 +301,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 1,
-    destination: getRandomDestination(),
+    destination: 2,
     offers: [],
     type: 'bus'
   },
@@ -310,8 +310,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 2,
-    destination: getRandomDestination(),
-    offers: [0, 1, 2],
+    destination: 3,
+    offers: [1, 2],
     type: 'train'
   },
   {
@@ -319,8 +319,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 3,
-    destination: getRandomDestination(),
-    offers: [0, 1, 2, 3],
+    destination: 5,
+    offers: [0, 1],
     type: 'ship'
   },
   {
@@ -328,7 +328,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 4,
-    destination: getRandomDestination(),
+    destination: 8,
     offers: [0],
     type: 'drive'
   },
@@ -337,8 +337,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 5,
-    destination: getRandomDestination(),
-    offers: [0, 1, 2, 3, 4],
+    destination: 0,
+    offers: [0, 1, 4],
     type: 'flight'
   },
   {
@@ -346,8 +346,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 6,
-    destination: getRandomDestination(),
-    offers: [0, 1],
+    destination: 6,
+    offers: [1],
     type: 'check-in'
   },
   {
@@ -355,8 +355,8 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 7,
-    destination: getRandomDestination(),
-    offers: [0, 1, 2],
+    destination: 4,
+    offers: [0, 2],
     type: 'sightseeing'
   },
   {
@@ -364,7 +364,7 @@ const mockPoint = [
     dateFrom: startTime,
     dateTo: endTime,
     id: 8,
-    destination: getRandomDestination(),
+    destination: 7,
     offers: [],
     type: 'restaurant'
   }
@@ -374,4 +374,4 @@ function getRandomPoint() {
   return getRandomArrayElement(mockPoint);
 }
 
-export { getRandomPoint, mockOffersByType };
+export { getRandomPoint, mockOffersByType, mockDestination };

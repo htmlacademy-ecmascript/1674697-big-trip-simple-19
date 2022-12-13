@@ -1,17 +1,7 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
+import { mockOffersByType, mockDestination } from '../mock/point.js';
 
-// const createOffersTemplate = (offers) => (
-//   offers ? offers.map((offer) =>
-//     `<div class="event__offer-selector">
-//       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${offer.isChecked ? 'checked' : ''}>
-//       <label class="event__offer-label" for="event-offer-${offer.title}-1">
-//         <span class="event__offer-title">${offer.title}</span>
-//         &plus;&euro;&nbsp;
-//         <span class="event__offer-price">${offer.price}</span>
-//       </label>
-//     </div>`).join('') : ''
-// );
 
 function createFormEditEventTemplate(point) {
   const { basePrice, type, destination, offers, dateFrom, dateTo } = point;
@@ -19,14 +9,27 @@ function createFormEditEventTemplate(point) {
   const dateStart = humanizeEventDueDate(dateFrom, 'YY/MM/DD HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'YY/MM/DD HH:mm');
 
-  // const createTripTypeTemplate = (isChecked) =>
-  //   `<div class="event__type-item">
-  //     <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked ? 'checked' : ''}">
-  //     <label class="event__type-label  event__type-label--${type}"" for="event-type-${type}"-1">${type}</label>
-  //   </div>`;
+  const createTripTypeTemplate = mockOffersByType.map((item) =>
+    `<div class="event__type-item">
+      <input id="event-type-${item.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.type}" ${item.type.isChecked ? 'checked' : ''}">
+      <label class="event__type-label  event__type-label--${item.type}"" for="event-type-${item.type}"-1">${item.type}</label>
+    </div>`).join('');
 
-  // const tripTypeTemplate = createTripTypeTemplate(type);
-  // const offersTemplate = createOffersTemplate(offers);
+  const offersType = mockOffersByType.find((offer) => offer.type === type);
+
+  const createOffersTemplate =
+    offersType.offers.map((offer) =>
+      `<div class="event__offer-selector">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${offers.includes(offer.id) ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-${offer.title}-1">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </label>
+      </div>`).join('');
+
+  const destinationPoint = mockDestination.find((item) => destination === item.id);
+  const city = mockDestination.map((element) => `<option value="${element.name}"></option>`).join('');
 
   return (
     `<li class="trip-events__item">
@@ -42,7 +45,7 @@ function createFormEditEventTemplate(point) {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                tripTypeTemplate
+                ${createTripTypeTemplate}
               </fieldset>
             </div>
           </div>
@@ -51,11 +54,9 @@ function createFormEditEventTemplate(point) {
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint.name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              <option value="${destination.name}"></option>
-              <option value="${destination.name}"></option>
-              <option value="${destination.name}"></option>
+              ${city}
             </datalist>
           </div>
 
@@ -86,13 +87,13 @@ function createFormEditEventTemplate(point) {
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-            offersTemplate
+            ${createOffersTemplate}
             </div>
           </section>
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destination.description}</p>
+            <p class="event__destination-description">${destinationPoint.description}</p>
           </section>
         </section>
       </form>
