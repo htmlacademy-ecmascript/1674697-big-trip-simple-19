@@ -138,14 +138,150 @@ const mockOffer = [
   }
 ];
 
-function getRandomOffers() {
-  return getRandomArrayElement(mockOffer);
-}
-
-const mockOffersByType = {
-  type: getRandomArrayElement(OFFER_TYPE),
-  offers: Array.from({ length: getRandomInteger(0, 5) }, getRandomOffers),
-};
+const mockOffersByType = [
+  {
+    type: 'taxi',
+    offers: [
+      {
+        id: 0,
+        title: 'Upgrade to a business class',
+        price: 120,
+      },
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: 30,
+      },
+    ],
+  },
+  {
+    type: 'bus',
+    offers: [],
+  },
+  {
+    type: 'train',
+    offers: [
+      {
+        id: 0,
+        title: 'Book tickets',
+        price: 40,
+      },
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: 30,
+      },
+      {
+        id: 2,
+        title: 'Choose seats',
+        price: 5,
+      },
+    ],
+  },
+  {
+    type: 'ship',
+    offers: [
+      {
+        id: 0,
+        title: 'Book tickets',
+        price: 40,
+      },
+      {
+        id: 1,
+        title: 'Add luggage',
+        price: 30,
+      },
+      {
+        id: 2,
+        title: 'Upgrade to a business class',
+        price: 120,
+      },
+      {
+        id: 3,
+        title: 'Add meal',
+        price: 15,
+      },
+    ],
+  },
+  {
+    type: 'drive',
+    offers: [
+      {
+        id: 0,
+        title: 'Rent a car',
+        price: 200
+      }
+    ]
+  },
+  {
+    type: 'flight',
+    offers: [
+      {
+        id: 0,
+        title: 'Add luggage',
+        price: 30
+      },
+      {
+        id: 1,
+        title: 'Switch to comfort',
+        price: 80
+      },
+      {
+        id: 2,
+        title: 'Add meal',
+        price: 15
+      },
+      {
+        id: 3,
+        title: 'Choose seats',
+        price: 5
+      },
+      {
+        id: 4,
+        title: 'Travel by train',
+        price: 40
+      }
+    ]
+  },
+  {
+    type: 'check-in',
+    offers: [
+      {
+        id: 0,
+        title: 'Add breakfast',
+        price: 50
+      },
+      {
+        id: 1,
+        title: 'Order Uber',
+        price: 50,
+      },
+    ]
+  },
+  {
+    type: 'sightseeing',
+    offers: [
+      {
+        id: 0,
+        title: 'Book tickets',
+        price: 40
+      }, {
+        id: 1,
+        title: 'Lunch in city',
+        price: 30
+      },
+      {
+        id: 2,
+        title: 'Travel by train',
+        price: 40,
+      }
+    ]
+  },
+  {
+    type: 'restaurant',
+    offers: [],
+  }
+];
 
 const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
 const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
@@ -155,81 +291,81 @@ const mockPoint = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '0',
+    id: 0,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1],
     type: 'taxi'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '1',
+    id: 1,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [],
     type: 'bus'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '2',
+    id: 2,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1, 2],
     type: 'train'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '3',
+    id: 3,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1, 2, 3],
     type: 'ship'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '4',
+    id: 4,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0],
     type: 'drive'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '5',
+    id: 5,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1, 2, 3, 4],
     type: 'flight'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '6',
+    id: 6,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1],
     type: 'check-in'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '7',
+    id: 7,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [0, 1, 2],
     type: 'sightseeing'
   },
   {
     basePrice: getRandomInteger(120, 1000),
     dateFrom: startTime,
     dateTo: endTime,
-    id: '8',
+    id: 8,
     destination: getRandomDestination(),
-    offers: mockOffersByType.offers,
+    offers: [],
     type: 'restaurant'
   }
 ];
@@ -238,4 +374,4 @@ function getRandomPoint() {
   return getRandomArrayElement(mockPoint);
 }
 
-export { getRandomPoint };
+export { getRandomPoint, mockOffersByType };

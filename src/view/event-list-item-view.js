@@ -1,5 +1,6 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
+import { mockOffersByType } from '../mock/point.js';
 
 function createEventListItemTemplate(point) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
@@ -10,14 +11,26 @@ function createEventListItemTemplate(point) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const createOfferElement = (offers) =>
-    `<li class="event__offer">
-      <span class="event__offer-title">${offers.title}</span>
-      &plus;&euro;&nbsp;
-      <span class="event__offer-price">${offers.price}</span>
-    </li>`;
+  const offersType = mockOffersByType.find((offer) => offer.type === type);
+  const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
-  const offersList = offers.map((item) => createOfferElement(item)).join(' ');
+  const offersList = () => {
+    if (!offersChecked.length) {
+      return (
+        `<li class="event__offer">
+          <span class="event__offer-title">No additional offers</span>
+        </li>`
+      );
+    } else {
+      const offersCheckedTemplate = offersChecked.map((offer) =>
+        `<li class="event__offer">
+          <span class="event__offer-title">${offer.title}</span>
+          &plus;&euro;&nbsp;
+          <span class="event__offer-price">${offer.price}</span>
+        </li>`).join('');
+      return offersCheckedTemplate;
+    }
+  };
 
   return (
     `<li class="trip-events__item">
@@ -39,7 +52,7 @@ function createEventListItemTemplate(point) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offersList}
+          ${offersList()}
         </ul>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>

@@ -1,17 +1,17 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
 
-const createOffersTemplate = (offers) => (
-  offers ? offers.map((offer) =>
-    `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${offer.isChecked ? 'checked' : ''}>
-      <label class="event__offer-label" for="event-offer-${offer.title}-1">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </label>
-    </div>`).join('') : ''
-);
+// const createOffersTemplate = (offers) => (
+//   offers ? offers.map((offer) =>
+//     `<div class="event__offer-selector">
+//       <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${offer.isChecked ? 'checked' : ''}>
+//       <label class="event__offer-label" for="event-offer-${offer.title}-1">
+//         <span class="event__offer-title">${offer.title}</span>
+//         &plus;&euro;&nbsp;
+//         <span class="event__offer-price">${offer.price}</span>
+//       </label>
+//     </div>`).join('') : ''
+// );
 
 function createFormEditEventTemplate(point) {
   const { basePrice, type, destination, offers, dateFrom, dateTo } = point;
@@ -19,14 +19,14 @@ function createFormEditEventTemplate(point) {
   const dateStart = humanizeEventDueDate(dateFrom, 'YY/MM/DD HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'YY/MM/DD HH:mm');
 
-  const createTripTypeTemplate = (isChecked) =>
-    `<div class="event__type-item">
-      <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked ? 'checked' : ''}">
-      <label class="event__type-label  event__type-label--${type}"" for="event-type-${type}"-1">${type}</label>
-    </div>`;
+  // const createTripTypeTemplate = (isChecked) =>
+  //   `<div class="event__type-item">
+  //     <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${isChecked ? 'checked' : ''}">
+  //     <label class="event__type-label  event__type-label--${type}"" for="event-type-${type}"-1">${type}</label>
+  //   </div>`;
 
-  const tripTypeTemplate = createTripTypeTemplate(type);
-  const offersTemplate = createOffersTemplate(offers);
+  // const tripTypeTemplate = createTripTypeTemplate(type);
+  // const offersTemplate = createOffersTemplate(offers);
 
   return (
     `<li class="trip-events__item">
@@ -42,7 +42,7 @@ function createFormEditEventTemplate(point) {
             <div class="event__type-list">
               <fieldset class="event__type-group">
                 <legend class="visually-hidden">Event type</legend>
-                ${tripTypeTemplate}
+                tripTypeTemplate
               </fieldset>
             </div>
           </div>
@@ -86,7 +86,7 @@ function createFormEditEventTemplate(point) {
             <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
             <div class="event__available-offers">
-            ${offersTemplate}
+            offersTemplate
             </div>
           </section>
 
