@@ -75,68 +75,68 @@ const mockDestination = [
 //   return getRandomArrayElement(mockDestination);
 // }
 
-const mockOffer = [
-  {
-    id: 0,
-    title: 'Upgrade to a business class',
-    price: 120,
-  },
-  {
-    id: 1,
-    title: 'Book tickets',
-    price: 40,
-  },
-  {
-    id: 2,
-    title: 'Lunch in city',
-    price: 30,
-  },
-  {
-    id: 3,
-    title: 'Order Uber',
-    price: 50,
-  },
-  {
-    id: 4,
-    title: 'Add breakfast',
-    price: 50,
-  },
-  {
-    id: 5,
-    title: 'Rent a car',
-    price: 200,
-  },
-  {
-    id: 6,
-    title: 'Switch to comfort',
-    price: 80,
-  },
-  {
-    id: 7,
-    title: 'Add luggage',
-    price: 30,
-  },
-  {
-    id: 8,
-    title: 'Switch to comfort class',
-    price: 100,
-  },
-  {
-    id: 9,
-    title: 'Add meal',
-    price: 15,
-  },
-  {
-    id: 10,
-    title: 'Choose seats',
-    price: 5,
-  },
-  {
-    id: 11,
-    title: 'Travel by train',
-    price: 40,
-  }
-];
+// const mockOffer = [
+//   {
+//     id: 0,
+//     title: 'Upgrade to a business class',
+//     price: 120,
+//   },
+//   {
+//     id: 1,
+//     title: 'Book tickets',
+//     price: 40,
+//   },
+//   {
+//     id: 2,
+//     title: 'Lunch in city',
+//     price: 30,
+//   },
+//   {
+//     id: 3,
+//     title: 'Order Uber',
+//     price: 50,
+//   },
+//   {
+//     id: 4,
+//     title: 'Add breakfast',
+//     price: 50,
+//   },
+//   {
+//     id: 5,
+//     title: 'Rent a car',
+//     price: 200,
+//   },
+//   {
+//     id: 6,
+//     title: 'Switch to comfort',
+//     price: 80,
+//   },
+//   {
+//     id: 7,
+//     title: 'Add luggage',
+//     price: 30,
+//   },
+//   {
+//     id: 8,
+//     title: 'Switch to comfort class',
+//     price: 100,
+//   },
+//   {
+//     id: 9,
+//     title: 'Add meal',
+//     price: 15,
+//   },
+//   {
+//     id: 10,
+//     title: 'Choose seats',
+//     price: 5,
+//   },
+//   {
+//     id: 11,
+//     title: 'Travel by train',
+//     price: 40,
+//   }
+// ];
 
 const mockOffersByType = [
   {
