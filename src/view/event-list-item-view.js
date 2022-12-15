@@ -1,8 +1,7 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
-import { offersByType, tripDestinations } from '../mock/point.js';
 
-function createEventListItemTemplate(point) {
+function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
@@ -10,8 +9,9 @@ function createEventListItemTemplate(point) {
   const timeEnd = humanizeEventDueDate(dateTo, 'HH:mm');
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
-  const destinationPoint = tripDestinations.find((item) => destination === item.id);
-  const offersType = offersByType.find((offer) => offer.type === type);
+
+  const destinations = tripDestinations.find((item) => destination.includes(item.id));
+  const offersType = tripTypes.find((offer) => offer.type === type);
   const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
   const offersList = () => {
@@ -39,7 +39,7 @@ function createEventListItemTemplate(point) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinationPoint.name}</h3>
+        <h3 class="event__title">${type} ${destinations.name}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>
@@ -63,12 +63,14 @@ function createEventListItemTemplate(point) {
 }
 
 export default class EventListItemView {
-  constructor({ point }) {
+  constructor({ point, tripDestinations, tripTypes }) {
     this.point = point;
+    this.tripDestinations = tripDestinations;
+    this.tripTypes = tripTypes;
   }
 
   getTemplate() {
-    return createEventListItemTemplate(this.point);
+    return createEventListItemTemplate(this.point, this.tripDestinations, this.tripTypes);
   }
 
   getElement() {

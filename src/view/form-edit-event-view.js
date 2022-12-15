@@ -1,35 +1,34 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
-import { offersByType, tripDestinations } from '../mock/point.js';
 
-
-function createFormEditEventTemplate(point) {
+function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, type, destination, offers, dateFrom, dateTo } = point;
 
   const dateStart = humanizeEventDueDate(dateFrom, 'YY/MM/DD HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'YY/MM/DD HH:mm');
 
-  const createTripTypeTemplate = offersByType.map((item) =>
+  const destinations = tripDestinations.find((item) => destination.includes(item.id));
+  const offerByType = tripTypes.find((offer) => offer.type === type);
+  const tripOffers = offerByType.offers;
+
+  const createTripTypeTemplate = tripTypes.map((item) =>
     `<div class="event__type-item">
-      <input id="event-type-${item.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.type}" ${item.type.isChecked ? 'checked' : ''}">
-      <label class="event__type-label  event__type-label--${item.type}"" for="event-type-${item.type}"-1">${item.type}</label>
+      <input id="event-type-${item.type}-${item.offers.id}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.type}" ${item.type.isChecked ? 'checked' : ''}">
+      <label class="event__type-label  event__type-label--${item.type}" for="event-type-${item.type}-${item.offers.id}">${item.type}</label>
     </div>`).join('');
 
-  const offersType = offersByType.find((offer) => offer.type === type);
-
   const createOffersTemplate =
-    offersType.offers.map((offer) =>
+    tripOffers.map((offer) =>
       `<div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-1" type="checkbox" name="event-offer-${offer.title}" ${offers.includes(offer.id) ? 'checked' : ''}>
-        <label class="event__offer-label" for="event-offer-${offer.title}-1">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.title}-${offer.id}" type="checkbox" name="event-offer-${offer.title}" ${offers.includes(offer.id) ? 'checked' : ''}>
+        <label class="event__offer-label" for="event-offer-${offer.title}-${offer.id}">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
         </label>
       </div>`).join('');
 
-  const destinationPoint = tripDestinations.find((item) => destination === item.id);
-  const city = tripDestinations.map((element) => `<option value="${element.name}"></option>`).join('');
+  const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   return (
     `<li class="trip-events__item">
@@ -54,9 +53,9 @@ function createFormEditEventTemplate(point) {
             <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationPoint.name}" list="destination-list-1">
+            <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinations.name}" list="destination-list-1">
             <datalist id="destination-list-1">
-              ${city}
+              ${cities}
             </datalist>
           </div>
 
@@ -93,7 +92,7 @@ function createFormEditEventTemplate(point) {
 
           <section class="event__section  event__section--destination">
             <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destinationPoint.description}</p>
+            <p class="event__destination-description">${destinations.description}</p>
           </section>
         </section>
       </form>
@@ -102,12 +101,14 @@ function createFormEditEventTemplate(point) {
 }
 
 export default class FormEditEventView {
-  constructor({ point }) {
+  constructor({ point, tripDestinations, tripTypes }) {
     this.point = point;
+    this.tripDestinations = tripDestinations;
+    this.tripTypes = tripTypes;
   }
 
   getTemplate() {
-    return createFormEditEventTemplate(this.point);
+    return createFormEditEventTemplate(this.point, this.tripDestinations, this.tripTypes);
   }
 
   getElement() {
