@@ -1,0 +1,5 @@
+const HOURS_GAP = 24;
+const MIN_EVENT_DURATION = 60; // 1 час
+const MAX_EVENT_DURATION = 10080; // 7 дней в часах
+
+export { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION };
