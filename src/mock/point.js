@@ -1,20 +1,42 @@
 import dayjs from 'dayjs';
-import { getRandomArrayElement, getRandomInteger } from '../utils.js';
-import { DESCRIPTION, HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+import { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+import { getPhotoOfDestination, getRandomInteger, getRandomArrayElement } from './utils.js';
 
-const generatePhotoOfDestination = () => {
-  const photosNumber = getRandomInteger(1, 200);
-  return {
-    src: `https://loremflickr.com/248/152?random=${photosNumber}`,
-    description: 'Some beautiful place',
-  };
-};
+const OFFER_TYPE = [
+  'taxi',
+  'bus',
+  'train',
+  'ship',
+  'drive',
+  'flight',
+  'check-in',
+  'sightseeing',
+  'restaurant'
+];
 
-const getPhotoOfDestination = function () {
-  return new Array(getRandomInteger(0, 5)).fill().map(() => generatePhotoOfDestination());
-};
+const CITIES = [
+  'Venice',
+  'Florence',
+  'Lucca',
+  'Pisa',
+  'Volterra',
+  'Siena',
+  'Milan',
+  'Verona',
+  'Rim'
+];
 
-const mockDestination = [
+const DESCRIPTION = [
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget.',
+  'Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.',
+  'Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante.',
+  'Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum.',
+  'Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui.',
+  'Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat.',
+  'Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.'
+];
+
+const tripDestinations = [
   {
     id: 0,
     description: getRandomArrayElement(DESCRIPTION),
@@ -71,74 +93,113 @@ const mockDestination = [
   }
 ];
 
-// function getRandomDestination() {
-//   return getRandomArrayElement(mockDestination);
-// }
+function getDestinations() {
+  return tripDestinations;
+}
 
-// const mockOffer = [
-//   {
-//     id: 0,
-//     title: 'Upgrade to a business class',
-//     price: 120,
-//   },
-//   {
-//     id: 1,
-//     title: 'Book tickets',
-//     price: 40,
-//   },
-//   {
-//     id: 2,
-//     title: 'Lunch in city',
-//     price: 30,
-//   },
-//   {
-//     id: 3,
-//     title: 'Order Uber',
-//     price: 50,
-//   },
-//   {
-//     id: 4,
-//     title: 'Add breakfast',
-//     price: 50,
-//   },
-//   {
-//     id: 5,
-//     title: 'Rent a car',
-//     price: 200,
-//   },
-//   {
-//     id: 6,
-//     title: 'Switch to comfort',
-//     price: 80,
-//   },
-//   {
-//     id: 7,
-//     title: 'Add luggage',
-//     price: 30,
-//   },
-//   {
-//     id: 8,
-//     title: 'Switch to comfort class',
-//     price: 100,
-//   },
-//   {
-//     id: 9,
-//     title: 'Add meal',
-//     price: 15,
-//   },
-//   {
-//     id: 10,
-//     title: 'Choose seats',
-//     price: 5,
-//   },
-//   {
-//     id: 11,
-//     title: 'Travel by train',
-//     price: 40,
-//   }
-// ];
+const offers = [
+  {
+    id: 0,
+    title: 'Upgrade to a business class',
+    price: 120,
+  },
+  {
+    id: 1,
+    title: 'Book tickets',
+    price: 40,
+  },
+  {
+    id: 2,
+    title: 'Lunch in city',
+    price: 30,
+  },
+  {
+    id: 3,
+    title: 'Order Uber',
+    price: 50,
+  },
+  {
+    id: 4,
+    title: 'Add breakfast',
+    price: 50,
+  },
+  {
+    id: 5,
+    title: 'Rent a car',
+    price: 200,
+  },
+  {
+    id: 6,
+    title: 'Switch to comfort',
+    price: 80,
+  },
+  {
+    id: 7,
+    title: 'Add luggage',
+    price: 30,
+  },
+  {
+    id: 8,
+    title: 'Switch to comfort class',
+    price: 100,
+  },
+  {
+    id: 9,
+    title: 'Add meal',
+    price: 15,
+  },
+  {
+    id: 10,
+    title: 'Choose seats',
+    price: 5,
+  },
+  {
+    id: 11,
+    title: 'Travel by train',
+    price: 40,
+  }
+];
 
-const mockOffersByType = [
+const offersByType1 = [
+  {
+    type: 'taxi',
+    offers: [0, 7],
+  },
+  {
+    type: 'bus',
+    offers: [],
+  },
+  {
+    type: 'train',
+    offers: [1, 7, 10],
+  },
+  {
+    type: 'ship',
+    offers: [0, 1, 7, 9],
+  },
+  {
+    type: 'drive',
+    offers: [5]
+  },
+  {
+    type: 'flight',
+    offers: [4, 6, 7, 9, 10]
+  },
+  {
+    type: 'check-in',
+    offers: [3, 4]
+  },
+  {
+    type: 'sightseeing',
+    offers: [1, 2, 11]
+  },
+  {
+    type: 'restaurant',
+    offers: [],
+  }
+];
+
+const offersByType = [
   {
     type: 'taxi',
     offers: [
@@ -283,14 +344,18 @@ const mockOffersByType = [
   }
 ];
 
-const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
-const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
+function getOffersByType() {
+  return offersByType;
+}
 
-const mockPoint = [
+const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
+// const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
+
+const tripPoint = [
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 0,
     destination: 1,
     offers: [1],
@@ -298,8 +363,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 1,
     destination: 2,
     offers: [],
@@ -307,8 +372,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 2,
     destination: 3,
     offers: [1, 2],
@@ -316,8 +381,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 3,
     destination: 5,
     offers: [0, 1],
@@ -325,8 +390,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 4,
     destination: 8,
     offers: [0],
@@ -334,8 +399,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 5,
     destination: 0,
     offers: [0, 1, 4],
@@ -343,8 +408,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 6,
     destination: 6,
     offers: [1],
@@ -352,8 +417,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 7,
     destination: 4,
     offers: [0, 2],
@@ -361,8 +426,8 @@ const mockPoint = [
   },
   {
     basePrice: getRandomInteger(120, 1000),
-    dateFrom: startTime,
-    dateTo: endTime,
+    dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
+    dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 8,
     destination: 7,
     offers: [],
@@ -371,7 +436,7 @@ const mockPoint = [
 ];
 
 function getRandomPoint() {
-  return getRandomArrayElement(mockPoint);
+  return getRandomArrayElement(tripPoint);
 }
 
-export { getRandomPoint, mockOffersByType, mockDestination };
+export { getRandomPoint, offersByType, tripDestinations, getDestinations, getOffersByType };

@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
-import { mockOffersByType, mockDestination } from '../mock/point.js';
+import { offersByType, tripDestinations } from '../mock/point.js';
 
 function createEventListItemTemplate(point) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
@@ -10,8 +10,8 @@ function createEventListItemTemplate(point) {
   const timeEnd = humanizeEventDueDate(dateTo, 'HH:mm');
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
-  const destinationPoint = mockDestination.find((item) => destination === item.id);
-  const offersType = mockOffersByType.find((offer) => offer.type === type);
+  const destinationPoint = tripDestinations.find((item) => destination === item.id);
+  const offersType = offersByType.find((offer) => offer.type === type);
   const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
   const offersList = () => {

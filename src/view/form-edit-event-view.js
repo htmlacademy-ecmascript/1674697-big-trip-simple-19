@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 import { humanizeEventDueDate } from '../utils.js';
-import { mockOffersByType, mockDestination } from '../mock/point.js';
+import { offersByType, tripDestinations } from '../mock/point.js';
 
 
 function createFormEditEventTemplate(point) {
@@ -9,13 +9,13 @@ function createFormEditEventTemplate(point) {
   const dateStart = humanizeEventDueDate(dateFrom, 'YY/MM/DD HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'YY/MM/DD HH:mm');
 
-  const createTripTypeTemplate = mockOffersByType.map((item) =>
+  const createTripTypeTemplate = offersByType.map((item) =>
     `<div class="event__type-item">
       <input id="event-type-${item.type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.type}" ${item.type.isChecked ? 'checked' : ''}">
       <label class="event__type-label  event__type-label--${item.type}"" for="event-type-${item.type}"-1">${item.type}</label>
     </div>`).join('');
 
-  const offersType = mockOffersByType.find((offer) => offer.type === type);
+  const offersType = offersByType.find((offer) => offer.type === type);
 
   const createOffersTemplate =
     offersType.offers.map((offer) =>
@@ -28,8 +28,8 @@ function createFormEditEventTemplate(point) {
         </label>
       </div>`).join('');
 
-  const destinationPoint = mockDestination.find((item) => destination === item.id);
-  const city = mockDestination.map((element) => `<option value="${element.name}"></option>`).join('');
+  const destinationPoint = tripDestinations.find((item) => destination === item.id);
+  const city = tripDestinations.map((element) => `<option value="${element.name}"></option>`).join('');
 
   return (
     `<li class="trip-events__item">
