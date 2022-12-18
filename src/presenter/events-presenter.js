@@ -7,11 +7,14 @@ import { render } from '../render.js';
 export default class EventsPresenter {
   #eventListContainer = null;
   #pointsModel = null;
+  #eventPoints = null;
+  #eventDestinations = null;
+  #eventOffersByType = null;
   #eventListComponent = new EventListView();
 
-  #eventPoints = [];
-  #eventDestinations = [];
-  #eventOffersByType = [];
+  // #eventPoints = [];
+  // #eventDestinations = [];
+  // #eventOffersByType = [];
 
   constructor({ eventListContainer, pointsModel }) {
     this.#eventListContainer = eventListContainer;
@@ -24,11 +27,17 @@ export default class EventsPresenter {
     this.#eventOffersByType = this.#pointsModel.offersByType;
 
     render(this.#eventListComponent, this.#eventListContainer);
-    render(new FormEditEventView({ point: this.#eventPoints[0], tripDestinations: this.#eventDestinations, tripTypes: this.#eventOffersByType }), this.#eventListComponent.element);
-    render(new FormNewEventView(), this.#eventListComponent.element);
+    // render(new FormEditEventView({ point: this.#eventPoints[0], tripDestinations: this.#eventDestinations, tripTypes: this.#eventOffersByType }), this.#eventListComponent.element);
+    // render(new FormNewEventView(), this.#eventListComponent.element);
 
-    this.#eventPoints.forEach((event) => {
-      render(new EventListItemView({ point: event, tripDestinations: this.#eventDestinations, tripTypes: this.#eventOffersByType }), this.#eventListComponent.element);
+    this.#eventPoints.forEach((point) => {
+      this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType);
     });
+  }
+
+  #renderPoint(point, tripDestinations, tripTypes) {
+    const pointComponent = new EventListItemView({point, tripDestinations, tripTypes});
+
+    render(pointComponent, this.#eventListComponent.element);
   }
 }
