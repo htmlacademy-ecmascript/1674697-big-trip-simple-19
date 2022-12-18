@@ -1,5 +1,5 @@
 import EventListView from '../view/event-list-view.js';
-import FormNewEventView from '../view/form-new-event-view.js';
+// import FormNewEventView from '../view/form-new-event-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
 import { isEscapeKey } from '../utils.js';
@@ -12,10 +12,6 @@ export default class EventsPresenter {
   #eventDestinations = null;
   #eventOffersByType = null;
   #eventListComponent = new EventListView();
-
-  // #eventPoints = [];
-  // #eventDestinations = [];
-  // #eventOffersByType = [];
 
   constructor({ eventListContainer, pointsModel }) {
     this.#eventListContainer = eventListContainer;
