@@ -2,6 +2,7 @@ import EventListView from '../view/event-list-view.js';
 import FormNewEventView from '../view/form-new-event-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
+import { isEscapeKey } from '../utils.js';
 import { render } from '../render.js';
 
 export default class EventsPresenter {
@@ -27,7 +28,6 @@ export default class EventsPresenter {
     this.#eventOffersByType = this.#pointsModel.offersByType;
 
     render(this.#eventListComponent, this.#eventListContainer);
-    // render(new FormEditEventView({ point: this.#eventPoints[0], tripDestinations: this.#eventDestinations, tripTypes: this.#eventOffersByType }), this.#eventListComponent.element);
     // render(new FormNewEventView(), this.#eventListComponent.element);
 
     this.#eventPoints.forEach((point) => {
@@ -36,7 +36,35 @@ export default class EventsPresenter {
   }
 
   #renderPoint(point, tripDestinations, tripTypes) {
-    const pointComponent = new EventListItemView({point, tripDestinations, tripTypes});
+    const pointComponent = new EventListItemView({ point, tripDestinations, tripTypes });
+    const pointEditEventComponent = new FormEditEventView({ point, tripDestinations, tripTypes });
+
+    const escapeKeydownHandler = (evt) => {
+      if (isEscapeKey) {
+        closeEditFormHandler(evt);
+      }
+    };
+
+    const replaceFormToPoint = () => {
+      this.#eventListComponent.element.replaceChild(pointComponent.element, pointEditEventComponent.element);
+      pointEditEventComponent.element.querySelector('form').removeEventListener('submit', closeEditFormHandler);
+      pointEditEventComponent.element.querySelector('.event__rollup-btn').removeEventListener('click', replaceFormToPoint);
+      document.removeEventListener('keydown', escapeKeydownHandler);
+    };
+
+    const replacePointToForm = () => {
+      this.#eventListComponent.element.replaceChild(pointEditEventComponent.element, pointComponent.element);
+      pointEditEventComponent.element.querySelector('form').addEventListener('submit', closeEditFormHandler);
+      pointEditEventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', replaceFormToPoint);
+      document.addEventListener('keydown', escapeKeydownHandler);
+    };
+
+    function closeEditFormHandler(evt) {
+      evt.preventDefault();
+      replaceFormToPoint();
+    }
+
+    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', replacePointToForm);
 
     render(pointComponent, this.#eventListComponent.element);
   }
