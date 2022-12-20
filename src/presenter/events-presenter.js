@@ -1,7 +1,9 @@
+import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
 // import FormNewEventView from '../view/form-new-event-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
+import EventsMessageView from '../view/event-list-empty-view.js';
 import { isEscapeKey } from '../utils.js';
 import { render } from '../render.js';
 
@@ -11,7 +13,9 @@ export default class EventsPresenter {
   #eventPoints = null;
   #eventDestinations = null;
   #eventOffersByType = null;
+  #eventsSortComponent = new SortView();
   #eventListComponent = new EventListView();
+  #eventsMessageComponent = new EventsMessageView();
 
   constructor({ eventListContainer, pointsModel }) {
     this.#eventListContainer = eventListContainer;
@@ -23,12 +27,16 @@ export default class EventsPresenter {
     this.#eventDestinations = this.#pointsModel.tripDestinations;
     this.#eventOffersByType = this.#pointsModel.offersByType;
 
-    render(this.#eventListComponent, this.#eventListContainer);
     // render(new FormNewEventView(), this.#eventListComponent.element);
-
-    this.#eventPoints.forEach((point) => {
-      this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType);
-    });
+    if (this.#eventPoints.length > 0) {
+      render(this.#eventsSortComponent, this.#eventListContainer);
+      render(this.#eventListComponent, this.#eventListContainer);
+      this.#eventPoints.forEach((point) => {
+        this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType);
+      });
+    } else {
+      render(this.#eventsMessageComponent, this.#eventListContainer);
+    }
   }
 
   #renderPoint(point, tripDestinations, tripTypes) {
