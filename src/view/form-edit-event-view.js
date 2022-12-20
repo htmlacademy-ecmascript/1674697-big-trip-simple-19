@@ -101,25 +101,29 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
 }
 
 export default class FormEditEventView {
+  #element = null;
+  #point = null;
+  #tripDestinations = null;
+  #tripTypes = null;
   constructor({ point, tripDestinations, tripTypes }) {
-    this.point = point;
-    this.tripDestinations = tripDestinations;
-    this.tripTypes = tripTypes;
+    this.#point = point;
+    this.#tripDestinations = tripDestinations;
+    this.#tripTypes = tripTypes;
   }
 
-  getTemplate() {
-    return createFormEditEventTemplate(this.point, this.tripDestinations, this.tripTypes);
+  get template() {
+    return createFormEditEventTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
 
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
