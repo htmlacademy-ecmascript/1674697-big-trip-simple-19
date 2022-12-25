@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeEventDueDate } from '../utils.js';
 
 function createEventListItemTemplate(point, tripDestinations, tripTypes) {
@@ -62,12 +62,13 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   );
 }
 
-export default class EventListItemView {
-  #element = null;
+export default class EventListItemView extends AbstractView {
   #point = null;
   #tripDestinations = null;
   #tripTypes = null;
+
   constructor({ point, tripDestinations, tripTypes }) {
+    super();
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#tripTypes = tripTypes;
@@ -75,17 +76,5 @@ export default class EventListItemView {
 
   get template() {
     return createEventListItemTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

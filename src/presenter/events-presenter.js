@@ -4,7 +4,7 @@ import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
 import EventListEmptyView from '../view/event-list-empty-view.js';
 import { isEscapeKey } from '../utils.js';
-import { render } from '../render.js';
+import {render} from '../framework/render.js';
 
 export default class EventsPresenter {
   #eventListContainer = null;

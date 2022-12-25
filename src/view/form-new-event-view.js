@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 function createFormNewEventTemplate() {
   return (
@@ -167,21 +167,19 @@ function createFormNewEventTemplate() {
   );
 }
 
-export default class FormNewEventView {
-  #element = null;
+export default class FormNewEventView extends AbstractView {
+  #point = null;
+  #tripDestinations = null;
+  #tripTypes = null;
+
+  constructor({ point, tripDestinations, tripTypes }) {
+    super();
+    this.#point = point;
+    this.#tripDestinations = tripDestinations;
+    this.#tripTypes = tripTypes;
+  }
+
   get template() {
-    return createFormNewEventTemplate();
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
+    return createFormNewEventTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
 }
