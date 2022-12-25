@@ -66,15 +66,23 @@ export default class EventListItemView extends AbstractView {
   #point = null;
   #tripDestinations = null;
   #tripTypes = null;
+  #handleEditClick = null;
 
-  constructor({ point, tripDestinations, tripTypes }) {
+  constructor({ point, tripDestinations, tripTypes, onEditClick }) {
     super();
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#tripTypes = tripTypes;
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
   }
 
   get template() {
     return createEventListItemTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
+
+  #editBtnHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }

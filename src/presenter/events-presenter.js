@@ -4,7 +4,7 @@ import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
 import EventListEmptyView from '../view/event-list-empty-view.js';
 import { isEscapeKey } from '../utils.js';
-import {render} from '../framework/render.js';
+import { render, replace } from '../framework/render.js';
 
 export default class EventsPresenter {
   #eventListContainer = null;
@@ -38,37 +38,45 @@ export default class EventsPresenter {
   }
 
   #renderPoint(point, tripDestinations, tripTypes) {
-    const pointComponent = new EventListItemView({ point, tripDestinations, tripTypes });
-    const pointEditEventComponent = new FormEditEventView({ point, tripDestinations, tripTypes });
-
-    const replaceFormToPoint = () => {
-      this.#eventListComponent.element.replaceChild(pointComponent.element, pointEditEventComponent.element);
-    };
-
-    const replacePointToForm = () => {
-      this.#eventListComponent.element.replaceChild(pointEditEventComponent.element, pointComponent.element);
-    };
-
-    const escapeKeydownHandler = (evt) => {
+    const escKeydownHandler = (evt) => {
       if (isEscapeKey) {
         evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escapeKeydownHandler);
+        replaceFormToPoint.call(this);
+        document.removeEventListener('keydown', escKeydownHandler);
       }
     };
 
-    pointEditEventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
-      replaceFormToPoint();
-      document.addEventListener('keydown', escapeKeydownHandler);
+    const pointComponent = new EventListItemView({
+      point,
+      tripDestinations,
+      tripTypes,
+      onEditClick: () => {
+        replacePointToForm();
+        document.addEventListener('keydown', escKeydownHandler);
+      },
     });
 
-    pointEditEventComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
-      replaceFormToPoint();
-      document.removeEventListener('keydown', escapeKeydownHandler);
+    const pointEditComponent = new FormEditEventView({
+      point,
+      tripDestinations,
+      tripTypes,
+      onFormSubmit:() => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeydownHandler);
+      },
+      onEditClick: () => {
+        replaceFormToPoint();
+        document.removeEventListener('keydown', escKeydownHandler);
+      }
     });
 
-    pointComponent.element.querySelector('.event__rollup-btn').addEventListener('click', replacePointToForm);
+    function replacePointToForm() {
+      replace(pointEditComponent, pointComponent);
+    }
+
+    function replaceFormToPoint() {
+      replace(pointComponent, pointEditComponent);
+    }
 
     render(pointComponent, this.#eventListComponent.element);
   }
