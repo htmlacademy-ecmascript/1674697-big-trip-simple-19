@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeEventDueDate } from '../utils.js';
 
 function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
@@ -100,30 +100,35 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
   );
 }
 
-export default class FormEditEventView {
-  #element = null;
+export default class FormEditEventView extends AbstractView {
   #point = null;
   #tripDestinations = null;
   #tripTypes = null;
-  constructor({ point, tripDestinations, tripTypes }) {
+  #handleFormSubmit = null;
+  #handleEditClick = null;
+
+  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick }) {
+    super();
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#tripTypes = tripTypes;
+    this.#handleFormSubmit = onFormSubmit;
+    this.#handleEditClick = onEditClick;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
   }
 
   get template() {
     return createFormEditEventTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleFormSubmit();
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #editBtnHandler = (evt) => {
+    evt.preventDefault();
+    this.#handleEditClick();
+  };
 }
