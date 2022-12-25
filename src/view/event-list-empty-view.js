@@ -1,19 +1,14 @@
 import { createElement } from '../render.js';
+import { Message } from '../const.js';
 
-const messages = {
-  everthing: 'Click New Event to create your first point',
-  past: 'There are no past events now',
-  future: 'There are no future events now'
-};
-
-function createMessageTemplate() {
-  return `<p class="trip-events__msg">${messages.everthing}</p>`;
+function createEmptyMessageTemplate() {
+  return `<p class="trip-events__msg">${Message.EVERYTHING}</p>`;
 }
 
-export default class EventsMessageView {
+export default class EventListEmptyView {
   #element = null;
   get template() {
-    return createMessageTemplate();
+    return createEmptyMessageTemplate();
   }
 
   get element() {
