@@ -3,7 +3,7 @@ import EventListView from '../view/event-list-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
 import EventListEmptyView from '../view/event-list-empty-view.js';
-import { isEscapeKey } from '../utils.js';
+import { isEscapeKey } from '../utils/utils.js';
 import { render, replace } from '../framework/render.js';
 
 export default class EventsPresenter {
@@ -60,7 +60,7 @@ export default class EventsPresenter {
       point,
       tripDestinations,
       tripTypes,
-      onFormSubmit:() => {
+      onFormSubmit: () => {
         replaceFormToPoint();
         document.removeEventListener('keydown', escKeydownHandler);
       },

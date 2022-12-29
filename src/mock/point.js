@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../const.js';
+import { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../utils/const.js';
 import { getPhotoOfDestination, getRandomInteger, getRandomArrayElement } from './utils.js';
 
 const DESCRIPTION = [
@@ -232,7 +232,7 @@ const tripPoints = [
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
     id: 1,
-    destination:[2],
+    destination: [2],
     offers: [],
     type: 'bus'
   },
