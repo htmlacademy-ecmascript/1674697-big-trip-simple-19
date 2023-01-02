@@ -5,7 +5,7 @@ function createEmptyMessageTemplate() {
   return `<p class="trip-events__msg">${Message.EVERYTHING}</p>`;
 }
 
-export default class EventListEmptyView extends AbstractView {
+export default class EventsEmptyView extends AbstractView {
   get template() {
     return createEmptyMessageTemplate();
   }
