@@ -2,39 +2,31 @@ import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import FormEditEventView from '../view/form-edit-event-view.js';
 import EventListItemView from '../view/event-list-item-view.js';
-import EventListEmptyView from '../view/event-list-empty-view.js';
+import EventsEmptyView from '../view/events-empty-view.js';
 import { isEscapeKey } from '../utils/utils.js';
-import { render, replace } from '../framework/render.js';
+import { RenderPosition, render, replace } from '../framework/render.js';
 
 export default class EventsPresenter {
-  #eventListContainer = null;
+  #eventsContainer = null;
   #pointsModel = null;
   #eventPoints = null;
   #eventDestinations = null;
   #eventOffersByType = null;
-  #eventsSortComponent = new SortView();
-  #eventListComponent = new EventListView();
-  #emptyViewMessageComponent = new EventListEmptyView();
+  #sortComponent = new SortView();
+  #eventsComponent = new EventListView();
+  #noPointComponent = new EventsEmptyView();
 
   constructor({ eventListContainer, pointsModel }) {
-    this.#eventListContainer = eventListContainer;
+    this.#eventsContainer = eventListContainer;
     this.#pointsModel = pointsModel;
   }
 
   init() {
-    this.#eventPoints = this.#pointsModel.points;
-    this.#eventDestinations = this.#pointsModel.tripDestinations;
-    this.#eventOffersByType = this.#pointsModel.offersByType;
+    this.#renderEvents();
+  }
 
-    if (this.#eventPoints.length > 0) {
-      render(this.#eventsSortComponent, this.#eventListContainer);
-      render(this.#eventListComponent, this.#eventListContainer);
-      this.#eventPoints.forEach((point) => {
-        this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType);
-      });
-    } else {
-      render(this.#emptyViewMessageComponent, this.#eventListContainer);
-    }
+  #renderSort() {
+    render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 
   #renderPoint(point, tripDestinations, tripTypes) {
@@ -78,6 +70,36 @@ export default class EventsPresenter {
       replace(pointComponent, pointEditComponent);
     }
 
-    render(pointComponent, this.#eventListComponent.element);
+    render(pointComponent, this.#eventsComponent.element);
+  }
+
+  #renderPoints(from, to) {
+    this.#eventPoints = this.#pointsModel.points;
+    this.#eventDestinations = this.#pointsModel.tripDestinations;
+    this.#eventOffersByType = this.#pointsModel.offersByType;
+
+    this.#eventPoints
+      .slice(from, to)
+      .forEach((point) => this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType));
+  }
+
+  #renderNoPoints() {
+    render(this.#noPointComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #renderPointList() {
+    render(this.#eventsComponent, this.#eventsContainer);
+    this.#renderPoints(0, Math.min(this.#eventPoints.length));
+  }
+
+  #renderEvents() {
+    this.#eventPoints = this.#pointsModel.points;
+
+    if (this.#eventPoints.length > 0) {
+      this.#renderSort();
+      this.#renderPointList();
+    } else {
+      this.#renderNoPoints();
+    }
   }
 }
