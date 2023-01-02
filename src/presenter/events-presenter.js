@@ -1,9 +1,7 @@
 import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
-import FormEditEventView from '../view/form-edit-event-view.js';
-import EventListItemView from '../view/event-list-item-view.js';
 import EventsEmptyView from '../view/events-empty-view.js';
-import { isEscapeKey } from '../utils/utils.js';
+import PointPresenter from './point-presenter';
 import { RenderPosition, render, replace } from '../framework/render.js';
 
 export default class EventsPresenter {
@@ -30,47 +28,10 @@ export default class EventsPresenter {
   }
 
   #renderPoint(point, tripDestinations, tripTypes) {
-    const escKeydownHandler = (evt) => {
-      if (isEscapeKey) {
-        evt.preventDefault();
-        replaceFormToPoint.call(this);
-        document.removeEventListener('keydown', escKeydownHandler);
-      }
-    };
-
-    const pointComponent = new EventListItemView({
-      point,
-      tripDestinations,
-      tripTypes,
-      onEditClick: () => {
-        replacePointToForm();
-        document.addEventListener('keydown', escKeydownHandler);
-      },
+    const pointPresenter = new PointPresenter({
+        pointListContainer: this.#eventsComponent.element,
     });
-
-    const pointEditComponent = new FormEditEventView({
-      point,
-      tripDestinations,
-      tripTypes,
-      onFormSubmit: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeydownHandler);
-      },
-      onEditClick: () => {
-        replaceFormToPoint();
-        document.removeEventListener('keydown', escKeydownHandler);
-      }
-    });
-
-    function replacePointToForm() {
-      replace(pointEditComponent, pointComponent);
-    }
-
-    function replaceFormToPoint() {
-      replace(pointComponent, pointEditComponent);
-    }
-
-    render(pointComponent, this.#eventsComponent.element);
+    pointPresenter.init(point, tripDestinations, tripTypes);
   }
 
   #renderPoints(from, to) {
