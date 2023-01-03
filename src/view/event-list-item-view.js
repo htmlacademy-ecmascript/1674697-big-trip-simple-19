@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeEventDueDate } from '../utils/utils.js';
+import { humanizeEventDueDate } from '../utils/common.js';
 
 function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
