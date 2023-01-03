@@ -1,8 +1,9 @@
 import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import EventsEmptyView from '../view/events-empty-view.js';
-import PointPresenter from './point-presenter';
-import { RenderPosition, render, replace } from '../framework/render.js';
+import PointPresenter from './point-presenter.js';
+import { RenderPosition, render } from '../framework/render.js';
+import { updateItem } from '../utils/common.js';
 
 export default class EventsPresenter {
   #eventsContainer = null;
@@ -23,6 +24,11 @@ export default class EventsPresenter {
   init() {
     this.#renderEvents();
   }
+
+  #handlePointChange = (updatedPoint) => {
+    this.#eventPoints = updateItem(this.#eventPoints, updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+  };
 
   #renderSort() {
     render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);

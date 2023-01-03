@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeEventDueDate } from '../utils/utils.js';
+import { humanizeEventDueDate } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
 function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
