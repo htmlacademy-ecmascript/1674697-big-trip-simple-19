@@ -1,3 +1,6 @@
+import dayjs from 'dayjs';
+import { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../utils/const';
+
 function getRandomArrayElement(items) {
   return items[Math.floor(Math.random() * items.length)];
 }
@@ -24,4 +27,7 @@ function getPhotoOfDestination() {
   return new Array(getRandomInteger(0, 5)).fill().map(() => generatePhotoOfDestination());
 }
 
-export { getPhotoOfDestination, getRandomInteger, getRandomArrayElement };
+const startTime = dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate();
+const endTime = dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate();
+
+export { getPhotoOfDestination, getRandomInteger, getRandomArrayElement, startTime, endTime };

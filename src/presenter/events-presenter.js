@@ -8,6 +8,7 @@ export default class EventsPresenter {
   #eventsContainer = null;
   #pointsModel = null;
   #eventPoints = null;
+  #pointPresenter = new Map();
   #eventDestinations = null;
   #eventOffersByType = null;
   #sortComponent = new SortView();
@@ -29,9 +30,10 @@ export default class EventsPresenter {
 
   #renderPoint(point, tripDestinations, tripTypes) {
     const pointPresenter = new PointPresenter({
-        pointListContainer: this.#eventsComponent.element,
+      pointListContainer: this.#eventsComponent.element,
     });
     pointPresenter.init(point, tripDestinations, tripTypes);
+    this.#pointPresenter.set(point.id, pointPresenter);
   }
 
   #renderPoints(from, to) {
@@ -46,6 +48,11 @@ export default class EventsPresenter {
 
   #renderNoPoints() {
     render(this.#noPointComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+  }
+
+  #clearPointList() {
+    this.#pointPresenter.forEach((presenter) => presenter.destroy());
+    this.#pointPresenter.clear();
   }
 
   #renderPointList() {
