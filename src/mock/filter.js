@@ -1,10 +1,10 @@
-import { filter } from '../utils/filter.js';
+import { getFilteredEvents } from '../utils/filter.js';
 
 function generateFilter(points) {
-  return Object.entries(filter).map(
-    ([filterName, filterTasks]) => ({
+  return Object.entries(getFilteredEvents(points)).map(
+    ([filterName, filteredPoints]) => ({
       name: filterName,
-      count: filterTasks(points).length,
+      count: filteredPoints.length,
     }),
   );
 }

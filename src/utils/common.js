@@ -3,8 +3,14 @@ import dayjs from 'dayjs';
 function humanizeEventDueDate(dueDate, dateFormat) {
   return dueDate ? dayjs(dueDate).format(dateFormat) : '';
 }
-function isFuturePoint(dateFrom) {
-  return dateFrom && (dayjs().isSame(dateFrom, 'D') || dayjs().isBefore(dateFrom, 'D'));
+function isStartDateExpired(dateFrom) {
+  return dayjs(dateFrom).isAfter(dayjs())
+}
+function isEndDateExpired(dateTo) {
+  return dayjs(dateTo).isAfter(dayjs())
+}
+function isFuturePoint(dateFrom, dateTo) {
+  return isStartDateExpired(dateFrom) && isEndDateExpired(dateTo)
 }
 
 function isEscapeKey(evt) {
