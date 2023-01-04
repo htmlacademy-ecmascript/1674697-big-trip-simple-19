@@ -12,7 +12,7 @@ export default class EventsPresenter {
   #pointPresenter = new Map();
   #eventDestinations = null;
   #eventOffersByType = null;
-  #sortComponent = new SortView();
+  #sortComponent = null;
   #eventsComponent = new EventListView();
   #noPointComponent = new EventsEmptyView();
 
@@ -34,7 +34,17 @@ export default class EventsPresenter {
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 
+  #handleSortTypeChange = (sortType) => {
+    // - Сортируем задачи
+    // - Очищаем список
+    // - Рендерим список заново
+  };
+
   #renderSort() {
+    this.#sortComponent = new SortView({
+      onSortTypeChange: this.#handleSortTypeChange
+    });
+
     render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 
