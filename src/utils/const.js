@@ -26,7 +26,7 @@ const FilterType = {
 };
 
 const SortType = {
-  DEFAULT: 'day',
+  DAY: 'day',
   PRICE: 'price',
 };
 

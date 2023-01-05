@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {nanoid} from 'nanoid';
+import { nanoid } from 'nanoid';
 import { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION } from '../utils/const.js';
 import { getPhotoOfDestination, getRandomInteger, getRandomArrayElement, startTime } from './utils.js';
 
@@ -220,7 +220,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [1],
     offers: [1],
     type: 'taxi'
@@ -229,7 +228,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [2],
     offers: [],
     type: 'bus'
@@ -238,7 +236,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [3],
     offers: [1, 2],
     type: 'train'
@@ -247,7 +244,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [5],
     offers: [0, 1],
     type: 'ship'
@@ -256,7 +252,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [8],
     offers: [0],
     type: 'drive'
@@ -265,7 +260,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [0],
     offers: [0, 1, 4],
     type: 'flight'
@@ -274,7 +268,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [6],
     offers: [1],
     type: 'check-in'
@@ -283,7 +276,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [4],
     offers: [0, 2],
     type: 'sightseeing'
@@ -292,7 +284,6 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    id: nanoid(),
     destination: [7],
     offers: [],
     type: 'restaurant'
@@ -300,7 +291,10 @@ const tripPoints = [
 ];
 
 function getRandomPoint() {
-  return getRandomArrayElement(tripPoints);
+  return {
+    id: nanoid(),
+    ...getRandomArrayElement(tripPoints)
+  };
 }
 
 export { getRandomPoint, offersByType, tripDestinations };

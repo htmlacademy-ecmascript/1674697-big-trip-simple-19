@@ -49,7 +49,6 @@ export default class PointPresenter {
       onEditClick: this.#handleFormSubmit,
     });
 
-    render(this.#pointComponent, this.#pointListContainer);
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this.#pointComponent, this.#pointListContainer);
       return;
