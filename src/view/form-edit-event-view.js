@@ -139,7 +139,15 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
+    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
   }
+
+  #priceChangeHandler = (evt) => {
+    evt.preventDefault();
+    const price = Number(evt.target.value);
+    evt.target.value = isNaN(price) ? this._state.basePrice : price;
+    this._setState({ basePrice: evt.target.value });
+  };
 
   get template() {
     return createFormEditEventTemplate(this._state);
