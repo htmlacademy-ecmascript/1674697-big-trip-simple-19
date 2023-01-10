@@ -34,6 +34,33 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
         </label>
       </div>`).join('');
 
+  const createPointEditOffersTemplate = () =>
+    `<section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${createOffersTemplate}
+        </div>
+    </section>`;
+
+  const createPointDestinationTemplate = () =>
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destinations.description}</p>
+    </section>`;
+
+
+  const createPointEditInfoTemplate = () => {
+    if (tripOffers.length === 0 && destinations.description === '') {
+      return '';
+    }
+    return (`
+      <section class="event__details">
+        ${(tripOffers.length > 0) ? `${createPointEditOffersTemplate()}` : ''}
+        ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
+      </section>
+  `);
+  };
+
   const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   return (
@@ -87,20 +114,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
             <span class="visually-hidden">Open event</span>
           </button>
         </header>
-        <section class="event__details">
-          <section class="event__section  event__section--offers">
-            <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-            <div class="event__available-offers">
-            ${createOffersTemplate}
-            </div>
-          </section>
-
-          <section class="event__section  event__section--destination">
-            <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-            <p class="event__destination-description">${destinations.description}</p>
-          </section>
-        </section>
+        ${createPointEditInfoTemplate()}
       </form>
     </li>`
   );
