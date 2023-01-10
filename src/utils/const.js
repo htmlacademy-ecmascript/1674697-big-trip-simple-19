@@ -25,4 +25,9 @@ const FilterType = {
   FUTURE: 'future'
 };
 
-export { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION, TYPES, Message, FilterType };
+const SortType = {
+  DAY: 'day',
+  PRICE: 'price',
+};
+
+export { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION, TYPES, Message, FilterType, SortType };
