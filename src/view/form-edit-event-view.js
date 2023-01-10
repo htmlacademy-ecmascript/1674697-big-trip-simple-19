@@ -1,15 +1,15 @@
-import AbstractView from '../framework/view/abstract-view.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeEventDueDate } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
-function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
+function createFormEditEventTemplate(point) {
   const { basePrice, type, destination, offers, dateFrom, dateTo, id } = point;
 
   const dateStart = humanizeEventDueDate(dateFrom, 'YY/MM/DD HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'YY/MM/DD HH:mm');
 
-  const destinations = tripDestinations.find((item) => destination.includes(item.id));
-  const offerByType = tripTypes.find((offer) => offer.type === type);
+  const destinations = point.tripDestinations.find((item) => destination.includes(item.id));
+  const offerByType = point.offersByType.find((offer) => offer.type === type);
   const tripOffers = offerByType.offers;
 
   const createTripTypeTemplate = () =>
@@ -61,7 +61,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
     `);
   };
 
-  const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
+  const cities = point.tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   return (
     `<li class="trip-events__item">
@@ -120,39 +120,43 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
   );
 }
 
-export default class FormEditEventView extends AbstractView {
-  #point = null;
-  #tripDestinations = null;
-  #tripTypes = null;
+export default class FormEditEventView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleEditClick = null;
   #handleDeleteClick = null;
 
-  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick, onDeleteClick }) {
+  constructor({ point, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
-    this.#point = point;
-    this.#tripDestinations = tripDestinations;
-    this.#tripTypes = tripTypes;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
     this.#handleDeleteClick = onDeleteClick;
+    this._setState(FormEditEventView.parsePointToState(point));
 
+    this._restoreHandlers();
+  }
+
+  _restoreHandlers() {
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   }
 
   get template() {
-    return createFormEditEventTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
+    return createFormEditEventTemplate(this._state);
+  }
+
+  reset(point) {
+    this.updateElement(
+      FormEditEventView.parsePointToState(this._state),
+    );
   }
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    this.#handleFormSubmit();
+    this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
   };
 
-  #editBtnHandler = (evt) => {
-    evt.preventDefault();
+  #editBtnHandler = () => {
     this.#handleEditClick();
   };
 
@@ -165,6 +169,8 @@ export default class FormEditEventView extends AbstractView {
   }
 
   static parseStateToPoint(state) {
-    return { ...state };
+    const data = {...state};
+
+    return data;
   }
 }
