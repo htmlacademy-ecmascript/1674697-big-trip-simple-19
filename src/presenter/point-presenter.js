@@ -47,6 +47,7 @@ export default class PointPresenter {
       tripTypes: this.#tripTypes,
       onFormSubmit: this.#handleFormSubmit,
       onEditClick: this.#handleFormSubmit,
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
@@ -105,4 +106,6 @@ export default class PointPresenter {
   #handleFormSubmit = () => {
     this.#replaceFormToPoint();
   };
+
+  #handleDeleteClick = () => { };
 }

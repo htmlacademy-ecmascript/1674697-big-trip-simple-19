@@ -36,10 +36,10 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
 
   const createPointEditOffersTemplate = () =>
     `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-          ${createOffersTemplate}
-        </div>
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+        ${createOffersTemplate}
+      </div>
     </section>`;
 
   const createPointDestinationTemplate = () =>
@@ -58,7 +58,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
         ${(tripOffers.length > 0) ? `${createPointEditOffersTemplate()}` : ''}
         ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
       </section>
-  `);
+    `);
   };
 
   const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
@@ -83,7 +83,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
           </div>
 
           <div class="event__field-group  event__field-group--destination">
-            <label class="event__label  event__type-output" for="event-destination-1">
+            <label class="event__label  event__type-output" for="event-destination-${destinations.id}">
             ${type}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${destinations.id}" type="text" name="event-destination" value="${destinations.name}" list="destination-list-${destinations.id}">
@@ -126,16 +126,20 @@ export default class FormEditEventView extends AbstractView {
   #tripTypes = null;
   #handleFormSubmit = null;
   #handleEditClick = null;
+  #handleDeleteClick = null;
 
-  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick }) {
+  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
     this.#point = point;
     this.#tripDestinations = tripDestinations;
     this.#tripTypes = tripTypes;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
+    this.#handleDeleteClick = onDeleteClick;
+
     this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
+    this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
   }
 
   get template() {
@@ -151,4 +155,16 @@ export default class FormEditEventView extends AbstractView {
     evt.preventDefault();
     this.#handleEditClick();
   };
+
+  #deleteClickHandler = () => {
+    this.#handleDeleteClick();
+  };
+
+  static parsePointToState(point) {
+    return { ...point };
+  }
+
+  static parseStateToPoint(state) {
+    return { ...state };
+  }
 }
