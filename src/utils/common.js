@@ -16,12 +16,8 @@ function isFuturePoint(dateFrom, dateTo) {
   return isStartDateExpired(dateFrom) && isEndDateExpired(dateTo);
 }
 
-function isEscapeKey(evt) {
-  return evt.key === 'Escape' || evt.key === 'Esc';
-}
-
 function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { humanizeEventDueDate, isFuturePoint, isEscapeKey, updateItem };
+export { humanizeEventDueDate, isFuturePoint, updateItem };

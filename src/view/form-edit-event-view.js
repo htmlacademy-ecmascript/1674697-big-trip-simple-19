@@ -177,7 +177,7 @@ export default class FormEditEventView extends AbstractStatefulView {
   }
 
   static parseStateToPoint(state) {
-    const data = {...state};
+    const data = { ...state };
 
     return data;
   }
