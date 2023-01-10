@@ -18,7 +18,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
       const isTypeChecked = currentType === type;
 
       return `<div class="event__type-item">
-        <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isTypeChecked ? 'checked' : ''}">
+        <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isTypeChecked ? 'checked' : ''}>
         <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-${index}">${eventType}</label>
       </div>`;
     }).join('');
