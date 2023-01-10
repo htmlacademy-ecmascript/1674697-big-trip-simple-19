@@ -26,7 +26,7 @@ export default class EventsPresenter {
   }
 
   init() {
-    this.#eventPoints = this.#pointsModel.points.sort(sortByDay);
+    this.#eventPoints = [...this.#pointsModel.points];
     this.#sourcedEventPoints = [...this.#pointsModel.points];
     this.#eventDestinations = [...this.#pointsModel.tripDestinations];
     this.#eventOffersByType = [...this.#pointsModel.offersByType];
@@ -108,6 +108,7 @@ export default class EventsPresenter {
 
   #renderEvents() {
     if (this.#eventPoints.length > 0) {
+      this.#sortPoints(this.#currentSortType);
       this.#renderSort();
       this.#renderPointList();
     } else {
