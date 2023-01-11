@@ -20,4 +20,8 @@ function updateItem(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-export { humanizeEventDueDate, isFuturePoint, updateItem };
+function getOfferId(point) {
+  return point.offersByType.find((offer) => offer.type === point.type).offers;
+}
+
+export { humanizeEventDueDate, isFuturePoint, updateItem, getOfferId };
