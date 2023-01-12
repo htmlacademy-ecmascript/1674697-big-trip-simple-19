@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeEventDueDate, getOfferId } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
