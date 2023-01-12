@@ -23,8 +23,7 @@ function createFormEditEventTemplate(point) {
   const dateStart = humanizeEventDueDate(dateFrom, 'DD/MM/YY HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
 
-  const destinations = point.tripDestinations.find((item) => destination.includes(item.id));
-
+  const destinations = point.tripDestinations.find((item) => item.id === destination);
   const cities = point.tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   const createTripTypeTemplate = () =>

@@ -10,7 +10,7 @@ function createEventListItemTemplate(point) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const destinations = point.tripDestinations.find((item) => destination.includes(item.id));
+  const destinations = point.tripDestinations.find((item) => item.id === destination);
   const offersType = point.offersByType.find((offer) => offer.type === type);
   const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 

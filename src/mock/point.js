@@ -220,7 +220,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [1],
+    destination: 0,
     offers: [1],
     type: 'taxi'
   },
@@ -228,7 +228,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [2],
+    destination: 1,
     offers: [],
     type: 'bus'
   },
@@ -236,7 +236,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [3],
+    destination: 2,
     offers: [1, 2],
     type: 'train'
   },
@@ -244,7 +244,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [5],
+    destination: 3,
     offers: [0, 1],
     type: 'ship'
   },
@@ -252,7 +252,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [8],
+    destination: 4,
     offers: [0],
     type: 'drive'
   },
@@ -260,7 +260,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [0],
+    destination: 5,
     offers: [0, 1, 4],
     type: 'flight'
   },
@@ -268,7 +268,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [6],
+    destination: 6,
     offers: [1],
     type: 'check-in'
   },
@@ -276,7 +276,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [4],
+    destination: 7,
     offers: [0, 2],
     type: 'sightseeing'
   },
@@ -284,7 +284,7 @@ const tripPoints = [
     basePrice: getRandomInteger(120, 1000),
     dateFrom: dayjs().add(getRandomInteger(-HOURS_GAP, HOURS_GAP), 'hour').toDate(),
     dateTo: dayjs(startTime).add(getRandomInteger(MIN_EVENT_DURATION, MAX_EVENT_DURATION), 'minute').toDate(),
-    destination: [7],
+    destination: 8,
     offers: [],
     type: 'restaurant'
   }
