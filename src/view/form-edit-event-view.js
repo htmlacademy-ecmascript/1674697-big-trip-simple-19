@@ -126,10 +126,10 @@ function createFormEditEventTemplate(point) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateStart}">
+            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStart}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateEnd}">
+            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEnd}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -160,6 +160,8 @@ export default class FormEditEventView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleEditClick = null;
   #handleDeleteClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ point, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
@@ -184,10 +186,8 @@ export default class FormEditEventView extends AbstractStatefulView {
     }
   }
 
-  reset(point) {
-    this.updateElement(
-      FormEditEventView.parsePointToState(point),
-    );
+  get template() {
+    return createFormEditEventTemplate(this._state);
   }
 
   #typeChangeHandler = (evt) => {
@@ -234,8 +234,42 @@ export default class FormEditEventView extends AbstractStatefulView {
     this._setState({ basePrice: evt.target.value });
   };
 
-  get template() {
-    return createFormEditEventTemplate(this._state);
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDatepicker() {
+    this.#datepickerFrom.from = flatpickr(
+      this.element.querySelector('#event-start-time'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #formSubmitHandler = (evt) => {
@@ -250,6 +284,26 @@ export default class FormEditEventView extends AbstractStatefulView {
   #deleteClickHandler = () => {
     this.#handleDeleteClick();
   };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  };
+
+  reset(point) {
+    this.updateElement(
+      FormEditEventView.parsePointToState(point),
+    );
+  }
 
   static parsePointToState(point) {
     return { ...point };
