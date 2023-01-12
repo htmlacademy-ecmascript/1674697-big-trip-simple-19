@@ -1,14 +1,31 @@
+import dayjs from 'dayjs';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
 import { humanizeEventDueDate, getOfferId } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
+const BLANK_POINT = {
+  basePrice: null,
+  dateFrom: dayjs().toDate(),
+  dateTo: dayjs().toDate(),
+  destination: null,
+  offers: [],
+  type: 'taxi',
+};
+
 function createFormEditEventTemplate(point) {
   const { basePrice, type, destination, offers, dateFrom, dateTo, id } = point;
+  const isNewPoint = !('id' in point);
+
+  if (isNewPoint) {
+    point = { ...point, ...BLANK_POINT };
+  }
 
   const dateStart = humanizeEventDueDate(dateFrom, 'DD/MM/YY HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
 
   const destinations = point.tripDestinations.find((item) => destination.includes(item.id));
+
+  const cities = point.tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   const createTripTypeTemplate = () =>
     TYPES.map((eventType, index) => {
@@ -44,10 +61,24 @@ function createFormEditEventTemplate(point) {
       </div>
     </section>`;
 
+  const createDestinationPictures = (pictures) => {
+    if (!pictures.length) {
+      return '';
+    }
+    const destinationPictures = pictures.map((picture) => `<img class="event__photo" src=${picture.src} alt=${picture.description}>`).join('');
+
+    return (
+      `<div class="event__photos-container">
+        <div class="event__photos-tape">${destinationPictures}</div>
+      </div>`
+    );
+  };
+
   const createPointDestinationTemplate = () =>
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      <p class="event__destination-description">${destinations.description}</p>
+      ${(destinations.description !== '') ? `<p class="event__destination-description">${destinations.description}</p>` : ''}
+      ${createDestinationPictures(destinations.pictures)}
     </section>`;
 
   const createPointEditInfoTemplate = () => {
@@ -61,8 +92,6 @@ function createFormEditEventTemplate(point) {
       </section>
     `);
   };
-
-  const cities = point.tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   return (
     `<li class="trip-events__item">
@@ -110,10 +139,14 @@ function createFormEditEventTemplate(point) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          <button class="event__reset-btn" type="reset">Delete</button>
-          <button class="event__rollup-btn" type="button">
-            <span class="visually-hidden">Open event</span>
-          </button>
+          ${isNewPoint ? `
+            <button class="event__reset-btn" type="reset">Cancel</button>
+            ` : `
+            <button class="event__reset-btn" type="reset">Delete</button>
+            <button class="event__rollup-btn" type="button">
+              <span class="visually-hidden">Open event</span>
+            </button>
+          `}
         </header>
         ${createPointEditInfoTemplate()}
       </form>
@@ -149,6 +182,12 @@ export default class FormEditEventView extends AbstractStatefulView {
     }
   }
 
+  reset(point) {
+    this.updateElement(
+      FormEditEventView.parsePointToState(point),
+    );
+  }
+
   #typeChangeHandler = (evt) => {
     evt.preventDefault();
 
@@ -162,15 +201,12 @@ export default class FormEditEventView extends AbstractStatefulView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
 
-    if (!evt.target.value) {
-      this.updateElement({
-        destination: ''
-      });
-      return;
-    }
-
     const destination = this._state.tripDestinations.find((item) => item.name === evt.target.value);
-    this.updateElement({ destination: destination.id });
+    if (destination === undefined) {
+      this.reset(this._state);
+    } else {
+      this.updateElement({ destination: destination.id });
+    }
   };
 
   #offerChangeHandler = (evt) => {
@@ -200,12 +236,6 @@ export default class FormEditEventView extends AbstractStatefulView {
     return createFormEditEventTemplate(this._state);
   }
 
-  reset(point) {
-    this.updateElement(
-      FormEditEventView.parsePointToState(this._state),
-    );
-  }
-
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
     this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
@@ -224,8 +254,6 @@ export default class FormEditEventView extends AbstractStatefulView {
   }
 
   static parseStateToPoint(state) {
-    const data = { ...state };
-
-    return data;
+    return { ...state };
   }
 }
