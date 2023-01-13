@@ -180,6 +180,7 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.#setDatepicker();
 
     if (getOfferId(this._state).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
@@ -247,7 +248,7 @@ export default class FormEditEventView extends AbstractStatefulView {
   };
 
   #setDatepicker() {
-    this.#datepickerFrom.from = flatpickr(
+    this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time'),
       {
         dateFormat: 'd/m/y H:i',
