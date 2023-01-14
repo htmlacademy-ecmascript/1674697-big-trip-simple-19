@@ -16,12 +16,16 @@ function isFuturePoint(dateFrom, dateTo) {
   return isStartDateExpired(dateFrom) && isEndDateExpired(dateTo);
 }
 
-function updateItem(items, update) {
+function isEscapeKey(evt) {
+  return evt.key === 'Escape' || evt.key === 'Esc';
+}
+
+function updateItems(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-function getOfferId(point) {
+function getOffersId(point) {
   return point.offersByType.find((offer) => offer.type === point.type).offers;
 }
 
-export { humanizeEventDueDate, isFuturePoint, updateItem, getOfferId };
+export { humanizeEventDueDate, isFuturePoint, isEscapeKey, updateItems, getOffersId };

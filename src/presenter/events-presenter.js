@@ -3,7 +3,7 @@ import EventListView from '../view/event-list-view.js';
 import EventsEmptyView from '../view/events-empty-view.js';
 import PointPresenter from './point-presenter.js';
 import { RenderPosition, render } from '../framework/render.js';
-import { updateItem } from '../utils/common.js';
+import { updateItems } from '../utils/common.js';
 import { sortByPrice, sortByDay } from '../utils/sort.js';
 import { SortType, FilterType } from '../utils/const.js';
 
@@ -42,7 +42,7 @@ export default class EventsPresenter {
   };
 
   #handlePointChange = (updatedPoint) => {
-    this.#eventPoints = updateItem(this.#eventPoints, updatedPoint);
+    this.#eventPoints = updateItems(this.#eventPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 

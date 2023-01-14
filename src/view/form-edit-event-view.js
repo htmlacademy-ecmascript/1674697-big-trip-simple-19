@@ -3,7 +3,7 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeEventDueDate, getOfferId } from '../utils/common.js';
+import { humanizeEventDueDate, getOffersId } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
 const BLANK_POINT = {
@@ -41,7 +41,7 @@ function createFormEditEventTemplate(point) {
     }).join('');
 
   const createOffersTemplate =
-    getOfferId(point).map((offer, index) => {
+    getOffersId(point).map((offer, index) => {
       const checked = offers.includes(offer.id) ? 'checked' : '';
       const offerName = offer.title.toLowerCase().replaceAll(' ', '-');
       return `
@@ -84,16 +84,21 @@ function createFormEditEventTemplate(point) {
     </section>`;
 
   const createPointEditInfoTemplate = () => {
-    if (getOfferId(point).length === 0 && destinations.description === '') {
+    if (getOffersId(point).length === 0 && destinations.description === '') {
       return '';
     }
     return (`
       <section class="event__details">
-        ${(getOfferId(point).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
+        ${(getOffersId(point).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
         ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
       </section>
     `);
   };
+
+  const createCloseButtonTemplate = () =>
+    `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`;
 
   return (
     `<li class="trip-events__item">
@@ -141,14 +146,8 @@ function createFormEditEventTemplate(point) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          ${isNewPoint ? `
-            <button class="event__reset-btn" type="reset">Cancel</button>
-            ` : `
-            <button class="event__reset-btn" type="reset">Delete</button>
-            <button class="event__rollup-btn" type="button">
-              <span class="visually-hidden">Open event</span>
-            </button>
-          `}
+          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+          ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
         ${createPointEditInfoTemplate()}
       </form>
@@ -182,7 +181,7 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
     this.#setDatepicker();
 
-    if (getOfferId(this._state).length > 0) {
+    if (getOffersId(this._state).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
   }
