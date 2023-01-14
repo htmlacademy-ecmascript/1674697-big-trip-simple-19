@@ -5,7 +5,7 @@ import PointPresenter from './point-presenter.js';
 import { RenderPosition, render } from '../framework/render.js';
 import { updateItem } from '../utils/common.js';
 import { sortByPrice, sortByDay } from '../utils/sort.js';
-import { SortType } from '../utils/const.js';
+import { SortType, FilterType } from '../utils/const.js';
 
 export default class EventsPresenter {
   #eventsContainer = null;
@@ -16,7 +16,8 @@ export default class EventsPresenter {
   #sortComponent = null;
   #currentSortType = SortType.DAY;
   #eventsComponent = new EventListView();
-  #noPointComponent = new EventsEmptyView();
+  #noPointComponent = null;
+  #filterType = FilterType.ALL;
 
   constructor({ eventListContainer, pointsModel }) {
     this.#eventsContainer = eventListContainer;
@@ -89,6 +90,9 @@ export default class EventsPresenter {
   }
 
   #renderNoPoints() {
+    this.#noPointComponent = new EventsEmptyView({
+      filterType: this.#filterType
+    });
     render(this.#noPointComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 

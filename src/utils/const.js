@@ -14,15 +14,14 @@ const TYPES = [
   'restaurant',
 ];
 
-const Message = {
-  EVERYTHING: 'Click New Event to create your first point',
-  PAST: 'There are no past events now',
-  FUTURE: 'There are no future events now'
-};
-
 const FilterType = {
   ALL: 'everything',
   FUTURE: 'future'
+};
+
+const Message = {
+  [FilterType.ALL]: 'Click New Event to create your first point',
+  [FilterType.FUTURE]: 'There are no future events now'
 };
 
 const SortType = {
