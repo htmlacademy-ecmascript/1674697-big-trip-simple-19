@@ -37,6 +37,11 @@ export default class EventsPresenter {
     this.#renderEvents();
   }
 
+  get points() {
+
+    return this.#pointsModel.points;
+  }
+
   #handleModeChange = () => {
     this.#pointPresenter.forEach((presenter) => presenter.resetView());
   };
