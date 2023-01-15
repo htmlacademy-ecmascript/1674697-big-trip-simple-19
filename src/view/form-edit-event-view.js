@@ -1,6 +1,9 @@
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeEventDueDate, getOfferId } from '../utils/common.js';
+import { humanizeEventDueDate, getOffersId } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
 const BLANK_POINT = {
@@ -38,7 +41,7 @@ function createFormEditEventTemplate(point) {
     }).join('');
 
   const createOffersTemplate =
-    getOfferId(point).map((offer, index) => {
+    getOffersId(point).map((offer, index) => {
       const checked = offers.includes(offer.id) ? 'checked' : '';
       const offerName = offer.title.toLowerCase().replaceAll(' ', '-');
       return `
@@ -81,16 +84,21 @@ function createFormEditEventTemplate(point) {
     </section>`;
 
   const createPointEditInfoTemplate = () => {
-    if (getOfferId(point).length === 0 && destinations.description === '') {
+    if (getOffersId(point).length === 0 && destinations.description === '') {
       return '';
     }
     return (`
       <section class="event__details">
-        ${(getOfferId(point).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
+        ${(getOffersId(point).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
         ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
       </section>
     `);
   };
+
+  const createCloseButtonTemplate = () =>
+    `<button class="event__rollup-btn" type="button">
+      <span class="visually-hidden">Open event</span>
+    </button>`;
 
   return (
     `<li class="trip-events__item">
@@ -123,10 +131,10 @@ function createFormEditEventTemplate(point) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time-${id}" type="text" name="event-start-time" value="${dateStart}">
+            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStart}">
             &mdash;
             <label class="visually-hidden" for="event-end-time-${id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time-${id}" type="text" name="event-end-time" value="${dateEnd}">
+            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEnd}">
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -138,14 +146,8 @@ function createFormEditEventTemplate(point) {
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-          ${isNewPoint ? `
-            <button class="event__reset-btn" type="reset">Cancel</button>
-            ` : `
-            <button class="event__reset-btn" type="reset">Delete</button>
-            <button class="event__rollup-btn" type="button">
-              <span class="visually-hidden">Open event</span>
-            </button>
-          `}
+          <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
+          ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
         ${createPointEditInfoTemplate()}
       </form>
@@ -157,6 +159,8 @@ export default class FormEditEventView extends AbstractStatefulView {
   #handleFormSubmit = null;
   #handleEditClick = null;
   #handleDeleteClick = null;
+  #datepickerFrom = null;
+  #datepickerTo = null;
 
   constructor({ point, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
@@ -175,16 +179,15 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+    this.#setDatepicker();
 
-    if (getOfferId(this._state).length > 0) {
+    if (getOffersId(this._state).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
   }
 
-  reset(point) {
-    this.updateElement(
-      FormEditEventView.parsePointToState(point),
-    );
+  get template() {
+    return createFormEditEventTemplate(this._state);
   }
 
   #typeChangeHandler = (evt) => {
@@ -231,8 +234,42 @@ export default class FormEditEventView extends AbstractStatefulView {
     this._setState({ basePrice: evt.target.value });
   };
 
-  get template() {
-    return createFormEditEventTemplate(this._state);
+  #dateFromChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateFrom: userDate,
+    });
+  };
+
+  #dateToChangeHandler = ([userDate]) => {
+    this.updateElement({
+      dateTo: userDate,
+    });
+  };
+
+  #setDatepicker() {
+    this.#datepickerFrom = flatpickr(
+      this.element.querySelector('#event-start-time'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        defaultDate: this._state.dateFrom,
+        onChange: this.#dateFromChangeHandler,
+      },
+    );
+    this.#datepickerTo = flatpickr(
+      this.element.querySelector('#event-end-time'),
+      {
+        dateFormat: 'd/m/y H:i',
+        enableTime: true,
+        // eslint-disable-next-line camelcase
+        time_24hr: true,
+        defaultDate: this._state.dateTo,
+        minDate: this._state.dateFrom,
+        onChange: this.#dateToChangeHandler,
+      },
+    );
   }
 
   #formSubmitHandler = (evt) => {
@@ -247,6 +284,26 @@ export default class FormEditEventView extends AbstractStatefulView {
   #deleteClickHandler = () => {
     this.#handleDeleteClick();
   };
+
+  removeElement = () => {
+    super.removeElement();
+
+    if (this.#datepickerFrom) {
+      this.#datepickerFrom.destroy();
+      this.#datepickerFrom = null;
+    }
+
+    if (this.#datepickerTo) {
+      this.#datepickerTo.destroy();
+      this.#datepickerTo = null;
+    }
+  };
+
+  reset(point) {
+    this.updateElement(
+      FormEditEventView.parsePointToState(point),
+    );
+  }
 
   static parsePointToState(point) {
     return { ...point };
