@@ -12,9 +12,11 @@ export default class EventsPresenter {
   #pointsModel = null;
   #eventPoints = [];
   #pointPresenter = new Map();
-  #pointsCommonData = null;
+  #eventDestinations = null;
+  #eventOffersByType = null;
   #sortComponent = null;
   #currentSortType = SortType.DAY;
+  #sourcedEventPoints = [];
   #eventsComponent = new EventListView();
   #noPointComponent = null;
   #filterType = FilterType.ALL;
@@ -25,15 +27,10 @@ export default class EventsPresenter {
   }
 
   init() {
-    this.#pointsCommonData = {
-      tripDestinations: [...this.#pointsModel.tripDestinations],
-      offersByType: [...this.#pointsModel.offersByType],
-    };
     this.#eventPoints = [...this.#pointsModel.points];
-    this.#eventPoints.forEach((point) => {
-      point.tripDestinations = this.#pointsCommonData.tripDestinations;
-      point.offersByType = this.#pointsCommonData.offersByType;
-    });
+    this.#sourcedEventPoints = [...this.#pointsModel.points];
+    this.#eventDestinations = [...this.#pointsModel.tripDestinations];
+    this.#eventOffersByType = [...this.#pointsModel.offersByType];
     this.#renderEvents();
   }
 
@@ -48,7 +45,7 @@ export default class EventsPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#eventPoints = updateItems(this.#eventPoints, updatedPoint);
-    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this.#pointPresenter.get(updatedPoint.id).init(updatedPoint, this.#eventDestinations, this.#eventOffersByType);
   };
 
   #sortPoints(sortType) {
@@ -84,13 +81,13 @@ export default class EventsPresenter {
     render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderPoint(point) {
+  #renderPoint(point, tripDestinations, tripTypes) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#eventsComponent.element,
       onDataChange: this.#handlePointChange,
       onModeChange: this.#handleModeChange
     });
-    pointPresenter.init(point);
+    pointPresenter.init(point, tripDestinations, tripTypes);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
@@ -109,7 +106,7 @@ export default class EventsPresenter {
   #renderPointList() {
     render(this.#eventsComponent, this.#eventsContainer);
     this.#eventPoints.forEach((point) => {
-      this.#renderPoint(point);
+      this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType);
     });
   }
 

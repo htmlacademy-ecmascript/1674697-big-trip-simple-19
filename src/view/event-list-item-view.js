@@ -1,7 +1,7 @@
 import AbstractView from '../framework/view/abstract-view.js';
 import { humanizeEventDueDate } from '../utils/common.js';
 
-function createEventListItemTemplate(point) {
+function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
@@ -10,8 +10,8 @@ function createEventListItemTemplate(point) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const destinations = point.tripDestinations.find((item) => item.id === destination);
-  const offersType = point.offersByType.find((offer) => offer.type === type);
+  const destinations = tripDestinations.find((item) => item.id === destination);
+  const offersType = tripTypes.find((offer) => offer.type === type);
   const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
   const offersList = () => {
@@ -64,17 +64,21 @@ function createEventListItemTemplate(point) {
 
 export default class EventListItemView extends AbstractView {
   #point = null;
+  #tripDestinations = null;
+  #tripTypes = null;
   #handleEditClick = null;
 
-  constructor({ point, onEditClick }) {
+  constructor({ point, tripDestinations, tripTypes, onEditClick }) {
     super();
     this.#point = point;
+    this.#tripDestinations = tripDestinations;
+    this.#tripTypes = tripTypes;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
   }
 
   get template() {
-    return createEventListItemTemplate(this.#point);
+    return createEventListItemTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
 
   #editBtnHandler = (evt) => {

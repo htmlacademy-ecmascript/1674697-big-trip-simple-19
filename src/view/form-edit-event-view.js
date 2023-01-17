@@ -15,7 +15,7 @@ const BLANK_POINT = {
   type: 'taxi',
 };
 
-function createFormEditEventTemplate(point) {
+function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, type, destination, offers, dateFrom, dateTo, id } = point;
   const isNewPoint = !('id' in point);
 
@@ -26,8 +26,8 @@ function createFormEditEventTemplate(point) {
   const dateStart = humanizeEventDueDate(dateFrom, 'DD/MM/YY HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
 
-  const destinations = point.tripDestinations.find((item) => item.id === destination);
-  const cities = point.tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
+  const destinations = tripDestinations.find((item) => item.id === destination);
+  const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   const createTripTypeTemplate = () =>
     TYPES.map((eventType, index) => {
@@ -41,7 +41,7 @@ function createFormEditEventTemplate(point) {
     }).join('');
 
   const createOffersTemplate =
-    getOffersId(point).map((offer, index) => {
+    getOffersId(point, tripTypes).map((offer, index) => {
       const checked = offers.includes(offer.id) ? 'checked' : '';
       const offerName = offer.title.toLowerCase().replaceAll(' ', '-');
       return `
@@ -84,12 +84,12 @@ function createFormEditEventTemplate(point) {
     </section>`;
 
   const createPointEditInfoTemplate = () => {
-    if (getOffersId(point).length === 0 && destinations.description === '') {
+    if (getOffersId(point, tripTypes).length === 0 && destinations.description === '') {
       return '';
     }
     return (`
       <section class="event__details">
-        ${(getOffersId(point).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
+        ${(getOffersId(point, tripTypes).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
         ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
       </section>
     `);
@@ -156,14 +156,18 @@ function createFormEditEventTemplate(point) {
 }
 
 export default class FormEditEventView extends AbstractStatefulView {
+  #tripDestinations = null;
+  #tripTypes = null;
   #handleFormSubmit = null;
   #handleEditClick = null;
   #handleDeleteClick = null;
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({ point, onFormSubmit, onEditClick, onDeleteClick }) {
+  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
+    this.#tripDestinations = tripDestinations;
+    this.#tripTypes = tripTypes;
     this.#handleFormSubmit = onFormSubmit;
     this.#handleEditClick = onEditClick;
     this.#handleDeleteClick = onDeleteClick;
@@ -178,16 +182,16 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
-    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
-    this.#setDatepicker();
-
-    if (getOffersId(this._state).length > 0) {
+    if (getOffersId(this._state, this.#tripTypes).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
+
+    this.#setDatepicker();
   }
 
   get template() {
-    return createFormEditEventTemplate(this._state);
+    return createFormEditEventTemplate(this._state, this.#tripDestinations, this.#tripTypes);
   }
 
   #typeChangeHandler = (evt) => {
@@ -203,7 +207,7 @@ export default class FormEditEventView extends AbstractStatefulView {
   #destinationChangeHandler = (evt) => {
     evt.preventDefault();
 
-    const destination = this._state.tripDestinations.find((item) => item.name === evt.target.value);
+    const destination = this.#tripDestinations.find((item) => item.name === evt.target.value);
     if (destination === undefined) {
       this.reset(this._state);
     } else {
@@ -215,7 +219,7 @@ export default class FormEditEventView extends AbstractStatefulView {
     evt.preventDefault();
 
     let offers = this._state.offers;
-    const currentOffer = parseInt(evt.target.dataset.offerId, 7);
+    const currentOffer = parseInt(evt.target.dataset.offerId, 10);
 
     if (evt.target.checked) {
       offers.push(currentOffer);

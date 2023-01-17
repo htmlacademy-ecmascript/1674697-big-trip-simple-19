@@ -24,8 +24,8 @@ function updateItems(items, update) {
   return items.map((item) => item.id === update.id ? update : item);
 }
 
-function getOffersId(point) {
-  return point.offersByType.find((offer) => offer.type === point.type).offers;
+function getOffersId(point, tripTypes) {
+  return tripTypes.find((offer) => offer.type === point.type).offers;
 }
 
 export { humanizeEventDueDate, isFuturePoint, isEscapeKey, updateItems, getOffersId };
