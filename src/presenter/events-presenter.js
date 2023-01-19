@@ -2,10 +2,10 @@ import SortView from '../view/sort-view.js';
 import EventListView from '../view/event-list-view.js';
 import EventsEmptyView from '../view/events-empty-view.js';
 import PointPresenter from './point-presenter.js';
-import {RenderPosition, render, remove} from '../framework/render.js';
+import { RenderPosition, render, remove } from '../framework/render.js';
 import { sortByPrice, sortByDay } from '../utils/sort.js';
 import { SortType, FilterType, UpdateType, UserAction } from '../utils/const.js';
-import {filter} from '../utils/filter.js';
+import { filter } from '../utils/filter.js';
 
 export default class EventsPresenter {
   #eventsContainer = null;
