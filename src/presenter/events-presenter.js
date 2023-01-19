@@ -5,10 +5,12 @@ import PointPresenter from './point-presenter.js';
 import {RenderPosition, render, remove} from '../framework/render.js';
 import { sortByPrice, sortByDay } from '../utils/sort.js';
 import { SortType, FilterType, UpdateType, UserAction } from '../utils/const.js';
+import {filter} from '../utils/filter.js';
 
 export default class EventsPresenter {
   #eventsContainer = null;
   #pointsModel = null;
+  #filterModel = null;
   #pointPresenter = new Map();
   #eventDestinations = null;
   #eventOffersByType = null;
@@ -18,11 +20,13 @@ export default class EventsPresenter {
   #noPointComponent = null;
   #filterType = FilterType.ALL;
 
-  constructor({ eventListContainer, pointsModel }) {
+  constructor({ eventListContainer, pointsModel, filterModel }) {
     this.#eventsContainer = eventListContainer;
     this.#pointsModel = pointsModel;
+    this.#filterModel = filterModel;
 
     this.#pointsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   init() {
@@ -32,13 +36,19 @@ export default class EventsPresenter {
   }
 
   get points() {
+    this.#filterType = this.#filterModel.filter;
+    const points = this.#pointsModel.points;
+    const filteredPoints = filter[this.#filterType](points);
+
     switch (this.#currentSortType) {
       case SortType.DAY:
-        return [...this.#pointsModel.points].sort(sortByDay);
+        filteredPoints.sort(sortByDay);
+        break;
       case SortType.PRICE:
-        return [...this.#pointsModel.points].sort(sortByPrice);
+        filteredPoints.sort(sortByPrice);
+        break;
     }
-    return this.#pointsModel.points;
+    return filteredPoints;
   }
 
   #handleModeChange = () => {

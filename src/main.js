@@ -1,5 +1,4 @@
 import { render } from './framework/render.js';
-import FilterView from './view/filter-view.js';
 import NewPointButtonView from './view/new-point-button-view';
 import EventsPresenter from './presenter/events-presenter.js';
 import FilterPresenter from './presenter/filter-presenter';
@@ -12,17 +11,11 @@ const tripEventsElement = document.querySelector('.trip-events');
 
 const pointsModel = new PointsModel();
 const filterModel = new FilterModel();
-const filters = [
-  {
-    type: 'everything',
-    name: 'ALL',
-    count: 0,
-  },
-];
 
 const eventsPresenter = new EventsPresenter({
   eventListContainer: tripEventsElement,
   pointsModel,
+  filterModel
 });
 
 const filterPresenter = new FilterPresenter({
