@@ -12,8 +12,6 @@ export default class EventsPresenter {
   #pointsModel = null;
   #filterModel = null;
   #pointPresenter = new Map();
-  #eventDestinations = null;
-  #eventOffersByType = null;
   #sortComponent = null;
   #currentSortType = SortType.DAY;
   #eventsComponent = new EventListView();
@@ -30,8 +28,6 @@ export default class EventsPresenter {
   }
 
   init() {
-    this.#eventDestinations = [...this.#pointsModel.tripDestinations];
-    this.#eventOffersByType = [...this.#pointsModel.offersByType];
     this.#renderEvents();
   }
 
@@ -49,6 +45,14 @@ export default class EventsPresenter {
         break;
     }
     return filteredPoints;
+  }
+
+  get destinations() {
+    return this.#pointsModel.tripDestinations;
+  }
+
+  get offers() {
+    return this.#pointsModel.offersByType;
   }
 
   #handleModeChange = () => {
@@ -72,7 +76,7 @@ export default class EventsPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#pointPresenter.get(data.id).init(data, this.#eventDestinations, this.#eventOffersByType);
+        this.#pointPresenter.get(data.id).init(data, this.destinations, this.offers);
         break;
       case UpdateType.MINOR:
         this.#clearEvents();
@@ -123,7 +127,7 @@ export default class EventsPresenter {
 
   #renderPointList(points) {
     render(this.#eventsComponent, this.#eventsContainer);
-    points.forEach((point) => this.#renderPoint(point, this.#eventDestinations, this.#eventOffersByType));
+    points.forEach((point) => this.#renderPoint(point, this.destinations, this.offers));
   }
 
   #clearEvents({ resetSortType = false } = {}) {
