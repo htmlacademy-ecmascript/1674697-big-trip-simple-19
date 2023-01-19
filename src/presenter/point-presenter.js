@@ -1,7 +1,8 @@
 import { render, replace, remove } from '../framework/render.js';
-import {isEscapeKey} from '../utils/common';
+import { isDatesEqual, isEscapeKey } from '../utils/common';
 import EventListItemView from '../view/event-list-item-view';
 import FormEditEventView from '../view/form-edit-event-view';
+import { UpdateType, UserAction } from '../utils/const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -105,15 +106,28 @@ export default class PointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate = isDatesEqual(this.#point.dateFrom, update.dateFrom);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+      update,
+    );
     this.#replaceFormToPoint();
   };
 
   #handleCloseClick = () => {
     this.#pointEditComponent.reset(this.#point);
+
     this.#replaceFormToPoint();
   };
 
-  #handleDeleteClick = () => { };
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
 }

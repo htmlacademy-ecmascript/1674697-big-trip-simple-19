@@ -20,12 +20,12 @@ function isEscapeKey(evt) {
   return evt.key === 'Escape' || evt.key === 'Esc';
 }
 
-function updateItems(items, update) {
-  return items.map((item) => item.id === update.id ? update : item);
-}
-
 function getOffersId(point, tripTypes) {
   return tripTypes.find((offer) => offer.type === point.type).offers;
 }
 
-export { humanizeEventDueDate, isFuturePoint, isEscapeKey, updateItems, getOffersId };
+function isDatesEqual(dateA, dateB) {
+  return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
+}
+
+export { humanizeEventDueDate, isFuturePoint, isEscapeKey, getOffersId, isDatesEqual };
