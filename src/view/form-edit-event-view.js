@@ -286,7 +286,7 @@ export default class FormEditEventView extends AbstractStatefulView {
   };
 
   #deleteClickHandler = () => {
-    this.#handleDeleteClick();
+    this.#handleDeleteClick(FormEditEventView.parseStateToPoint(this._state));
   };
 
   removeElement = () => {
