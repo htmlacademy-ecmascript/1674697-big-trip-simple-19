@@ -7,21 +7,17 @@ import { humanizeEventDueDate, getOffersId } from '../utils/common.js';
 import { TYPES } from '../utils/const.js';
 
 const BLANK_POINT = {
-  basePrice: null,
+  basePrice: 0,
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
-  destination: null,
+  destination: -1,
   offers: [],
-  type: 'taxi',
+  type: TYPES[0],
 };
 
 function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, type, destination, offers, dateFrom, dateTo, id } = point;
   const isNewPoint = !('id' in point);
-
-  if (isNewPoint) {
-    point = { ...point, ...BLANK_POINT };
-  }
 
   const dateStart = humanizeEventDueDate(dateFrom, 'DD/MM/YY HH:mm');
   const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
@@ -90,7 +86,7 @@ function createFormEditEventTemplate(point, tripDestinations, tripTypes) {
     return (`
       <section class="event__details">
         ${(getOffersId(point, tripTypes).length > 0) ? `${createPointEditOffersTemplate()}` : ''}
-        ${(destinations.description !== '') ? `${createPointDestinationTemplate()}` : ''}
+        ${(destinations !== -1) ? `${createPointDestinationTemplate()}` : ''}
       </section>
     `);
   };
@@ -164,7 +160,7 @@ export default class FormEditEventView extends AbstractStatefulView {
   #datepickerFrom = null;
   #datepickerTo = null;
 
-  constructor({ point, tripDestinations, tripTypes, onFormSubmit, onEditClick, onDeleteClick }) {
+  constructor({ point = {...BLANK_POINT} , tripDestinations, tripTypes, onFormSubmit, onEditClick, onDeleteClick }) {
     super();
     this.#tripDestinations = tripDestinations;
     this.#tripTypes = tripTypes;
