@@ -2,9 +2,9 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
-import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { humanizeEventDueDate, getOffersId } from '../utils/common.js';
-import { TYPES } from '../utils/const.js';
+import AbstractStatefulView from '../framework/view/abstract-stateful-view';
+import { humanizeEventDueDate, getOffersId } from '../utils/common';
+import { TYPES } from '../utils/const';
 
 const BLANK_POINT = {
   basePrice: 0,

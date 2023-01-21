@@ -1,5 +1,5 @@
-import { getRandomPoint } from '../mock/point.js';
-import { getRandomInteger } from '../mock/utils.js';
+import { getRandomPoint } from '../mock/point';
+import { getRandomInteger } from '../mock/utils';
 import Observable from '../framework/observable';
 
 const TASK_COUNT = 10;

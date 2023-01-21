@@ -1,7 +1,7 @@
-import { remove, render, RenderPosition } from '../framework/render.js';
+import { remove, render, RenderPosition } from '../framework/render';
 import FormEditEventView from '../view/form-edit-event-view';
 import { nanoid } from 'nanoid';
-import { UserAction, UpdateType } from '../utils/const.js';
+import { UserAction, UpdateType } from '../utils/const';
 import { isEscapeKey } from '../utils/common';
 
 export default class NewPointPresenter {

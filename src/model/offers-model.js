@@ -1,4 +1,4 @@
-import { getOffersByType } from '../mock/point.js';
+import { getOffersByType } from '../mock/point';
 import Observable from '../framework/observable';
 
 export default class OffersModel extends Observable {

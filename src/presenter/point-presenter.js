@@ -1,4 +1,4 @@
-import { render, replace, remove } from '../framework/render.js';
+import { render, replace, remove } from '../framework/render';
 import { isDatesEqual, isEscapeKey } from '../utils/common';
 import EventListItemView from '../view/event-list-item-view';
 import FormEditEventView from '../view/form-edit-event-view';

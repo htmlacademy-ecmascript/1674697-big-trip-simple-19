@@ -1,12 +1,12 @@
-import { RenderPosition, render, remove } from '../framework/render.js';
-import { filter } from '../utils/filter.js';
-import { SortType, FilterType, UpdateType, UserAction } from '../utils/const.js';
-import { sortByPrice, sortByDay } from '../utils/sort.js';
-import SortView from '../view/sort-view.js';
-import EventListView from '../view/event-list-view.js';
-import EventsEmptyView from '../view/events-empty-view.js';
-import PointPresenter from './point-presenter.js';
-import NewPointPresenter from './new-point-presenter.js';
+import { RenderPosition, render, remove } from '../framework/render';
+import { filter } from '../utils/filter';
+import { SortType, FilterType, UpdateType, UserAction } from '../utils/const';
+import { sortByPrice, sortByDay } from '../utils/sort';
+import SortView from '../view/sort-view';
+import EventListView from '../view/event-list-view';
+import EventsEmptyView from '../view/events-empty-view';
+import PointPresenter from './point-presenter';
+import NewPointPresenter from './new-point-presenter';
 
 export default class EventsPresenter {
   #eventsContainer = null;
