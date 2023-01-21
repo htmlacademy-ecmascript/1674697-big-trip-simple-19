@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -131,7 +132,7 @@ function createFormEditEventTemplate(point = BLANK_POINT, tripTypes, tripDestina
             <label class="event__label  event__type-output" for="event-destination-${point.id}">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${destName}" list="destination-list-${point.id}">
+            <input class="event__input  event__input--destination" id="event-destination-${point.id}" type="text" name="event-destination" value="${he.encode(destName)}" list="destination-list-${point.id}">
             <datalist id="destination-list-${point.id}">
               ${cities}
             </datalist>
