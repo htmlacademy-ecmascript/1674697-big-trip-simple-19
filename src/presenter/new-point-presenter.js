@@ -67,7 +67,7 @@ export default class NewPointPresenter {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (isEscapeKey()) {
+    if (isEscapeKey(evt)) {
       evt.preventDefault();
       this.destroy();
     }

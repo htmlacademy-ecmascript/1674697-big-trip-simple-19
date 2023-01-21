@@ -97,8 +97,10 @@ function createFormEditEventTemplate(point = BLANK_POINT, tripTypes, tripDestina
   const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
   let destName = '';
+  let isDisabled = true;
   if (point.destination !== -1) {
     destName = tripDestinations.find((item) => item.id === point.destination).name;
+    isDisabled = false;
   }
 
   const createCloseButtonTemplate = () =>
@@ -151,7 +153,7 @@ function createFormEditEventTemplate(point = BLANK_POINT, tripTypes, tripDestina
             <input class="event__input  event__input--price" id="event-price-${point.id}" type="text" name="event-price" value="${basePrice}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>Save</button>
           <button class="event__reset-btn" type="reset">${isNewPoint ? 'Cancel' : 'Delete'}</button>
           ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
