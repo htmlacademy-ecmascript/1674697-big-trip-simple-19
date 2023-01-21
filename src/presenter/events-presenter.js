@@ -63,8 +63,13 @@ export default class EventsPresenter {
   }
 
   createPoint() {
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      render(this.#eventsComponent, this.#eventsContainer);
+    }
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
+
     this.#newPointPresenter.init();
   }
 
@@ -146,7 +151,7 @@ export default class EventsPresenter {
     this.#noPointComponent = new EventsEmptyView({
       filterType: this.#filterType
     });
-    render(this.#noPointComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
+    render(this.#noPointComponent, this.#eventsContainer);
   }
 
   #renderPointList(points) {
@@ -172,7 +177,7 @@ export default class EventsPresenter {
 
   #renderEvents() {
     const points = this.points;
-    if (points.length === 0) {
+    if (!points.length) {
       this.#renderNoPoints();
       return;
     }
