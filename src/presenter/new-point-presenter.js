@@ -8,31 +8,29 @@ export default class NewPointPresenter {
   #pointListContainer = null;
   #handleDataChange = null;
   #handleDestroy = null;
-  // #point = null;
-  #tripDestinations = null;
-  #tripTypes = null;
-
+  #offers = null;
+  #destinations = null;
   #pointEditComponent = null;
 
-  constructor({ pointListContainer, onDataChange, onDestroy }) {
+  constructor({ pointListContainer, offers, destinations, onDataChange, onDestroy }) {
     this.#pointListContainer = pointListContainer;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleDataChange = onDataChange;
     this.#handleDestroy = onDestroy;
   }
 
-  init(tripDestinations, tripTypes) {
-    this.#tripDestinations = tripDestinations;
-    this.#tripTypes = tripTypes;
-
+  init() {
     if (this.#pointEditComponent !== null) {
       return;
     }
 
     this.#pointEditComponent = new FormEditEventView({
-      tripDestinations: this.#tripDestinations,
-      tripTypes: this.#tripTypes,
+      point: undefined,
+      tripTypes: this.#offers,
+      tripDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
-      onDeleteClick: this.#handleDeleteClick
+      onDeleteClick: this.#handleDeleteClick,
     });
 
     render(this.#pointEditComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);

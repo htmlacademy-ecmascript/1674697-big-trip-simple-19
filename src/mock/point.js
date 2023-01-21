@@ -70,6 +70,8 @@ const tripDestinations = [
   }
 ];
 
+const getTripDestinations = () => tripDestinations;
+
 const offersByType = [
   {
     type: 'taxi',
@@ -215,6 +217,8 @@ const offersByType = [
   }
 ];
 
+const getOffersByType = () => offersByType;
+
 const tripPoints = [
   {
     basePrice: getRandomInteger(120, 1000),
@@ -297,4 +301,4 @@ function getRandomPoint() {
   };
 }
 
-export { getRandomPoint, offersByType, tripDestinations };
+export { getRandomPoint, getOffersByType, getTripDestinations };

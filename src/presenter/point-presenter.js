@@ -18,34 +18,34 @@ export default class PointPresenter {
   #pointEditComponent = null;
 
   #point = null;
-  #tripDestinations = null;
-  #tripTypes = null;
+  #destinations = null;
+  #offers = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ pointListContainer, onDataChange, onModeChange }) {
+  constructor({ pointListContainer, offers, destinations, onDataChange, onModeChange }) {
     this.#pointListContainer = pointListContainer;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
 
-  init(point, tripDestinations, tripTypes) {
+  init(point) {
     this.#point = point;
-    this.#tripDestinations = tripDestinations;
-    this.#tripTypes = tripTypes;
 
     const prevPointComponent = this.#pointComponent;
     const prevPointEditComponent = this.#pointEditComponent;
 
     this.#pointComponent = new EventListItemView({
       point: this.#point,
-      tripDestinations: this.#tripDestinations,
-      tripTypes: this.#tripTypes,
+      tripTypes: this.#offers,
+      tripDestinations: this.#destinations,
       onEditClick: this.#handleEditClick,
     });
     this.#pointEditComponent = new FormEditEventView({
       point: this.#point,
-      tripDestinations: this.#tripDestinations,
-      tripTypes: this.#tripTypes,
+      tripTypes: this.#offers,
+      tripDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onEditClick: this.#handleCloseClick,
       onDeleteClick: this.#handleDeleteClick,

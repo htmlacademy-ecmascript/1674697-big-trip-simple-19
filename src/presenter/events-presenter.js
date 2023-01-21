@@ -11,6 +11,8 @@ import NewPointPresenter from './new-point-presenter.js';
 export default class EventsPresenter {
   #eventsContainer = null;
   #pointsModel = null;
+  #offersModel = null;
+  #destinationsModel = null;
   #filterModel = null;
   #pointPresenter = new Map();
   #newPointPresenter = null;
@@ -21,13 +23,17 @@ export default class EventsPresenter {
   #currentSortType = SortType.DAY;
   #filterType = FilterType.ALL;
 
-  constructor({ eventListContainer, pointsModel, filterModel, onNewPointDestroy }) {
+  constructor({ eventListContainer, pointsModel, filterModel, offersModel, destinationsModel, onNewPointDestroy }) {
     this.#eventsContainer = eventListContainer;
     this.#pointsModel = pointsModel;
+    this.#offersModel = offersModel;
+    this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
 
     this.#newPointPresenter = new NewPointPresenter({
       pointListContainer: this.#eventsComponent.element,
+      offers: this.offers,
+      destinations: this.destinations,
       onDataChange: this.#handleViewAction,
       onDestroy: onNewPointDestroy
     });
@@ -59,15 +65,15 @@ export default class EventsPresenter {
   createPoint() {
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
-    this.#newPointPresenter.init(this.offers, this.destinations);
+    this.#newPointPresenter.init();
   }
 
   get destinations() {
-    return this.#pointsModel.tripDestinations;
+    return this.#destinationsModel.destinations;
   }
 
   get offers() {
-    return this.#pointsModel.offersByType;
+    return this.#offersModel.offers;
   }
 
   #handleModeChange = () => {
@@ -124,13 +130,15 @@ export default class EventsPresenter {
     render(this.#sortComponent, this.#eventsContainer, RenderPosition.AFTERBEGIN);
   }
 
-  #renderPoint(point, tripDestinations, tripTypes) {
+  #renderPoint(point) {
     const pointPresenter = new PointPresenter({
       pointListContainer: this.#eventsComponent.element,
+      offers: this.offers,
+      destinations: this.destinations,
       onDataChange: this.#handleViewAction,
       onModeChange: this.#handleModeChange
     });
-    pointPresenter.init(point, tripDestinations, tripTypes);
+    pointPresenter.init(point);
     this.#pointPresenter.set(point.id, pointPresenter);
   }
 
@@ -143,7 +151,7 @@ export default class EventsPresenter {
 
   #renderPointList(points) {
     render(this.#eventsComponent, this.#eventsContainer);
-    points.forEach((point) => this.#renderPoint(point, this.destinations, this.offers));
+    points.forEach((point) => this.#renderPoint(point));
   }
 
   #clearEvents({ resetSortType = false } = {}) {
