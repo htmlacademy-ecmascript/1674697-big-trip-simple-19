@@ -1,22 +1,53 @@
-import { getRandomPoint, offersByType, tripDestinations } from '../mock/point.js';
-import { getRandomInteger } from '../mock/utils.js';
+import { getRandomPoint } from '../mock/point';
+import { getRandomInteger } from '../mock/utils';
+import Observable from '../framework/observable';
 
 const TASK_COUNT = 10;
 
-export default class PointsModel {
+export default class PointsModel extends Observable {
   #points = Array.from({ length: getRandomInteger(0, TASK_COUNT) }, getRandomPoint);
-  #tripDestinations = tripDestinations;
-  #offersByType = offersByType;
 
   get points() {
     return this.#points;
   }
 
-  get tripDestinations() {
-    return this.#tripDestinations;
+  updatePoint(updateType, update) {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t update unexisting point');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      update,
+      ...this.#points.slice(index + 1),
+    ];
+
+    this._notify(updateType, update);
   }
 
-  get offersByType() {
-    return this.#offersByType;
+  addPoint(updateType, update) {
+    this.#points = [
+      update,
+      ...this.#points,
+    ];
+
+    this._notify(updateType, update);
+  }
+
+  deletePoint(updateType, update) {
+    const index = this.#points.findIndex((point) => point.id === update.id);
+
+    if (index === -1) {
+      throw new Error('Can\'t delete unexisting point');
+    }
+
+    this.#points = [
+      ...this.#points.slice(0, index),
+      ...this.#points.slice(index + 1),
+    ];
+
+    this._notify(updateType);
   }
 }

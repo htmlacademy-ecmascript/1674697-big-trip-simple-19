@@ -1,7 +1,8 @@
-import AbstractView from '../framework/view/abstract-view.js';
-import { humanizeEventDueDate } from '../utils/common.js';
+import he from 'he';
+import AbstractView from '../framework/view/abstract-view';
+import { humanizeEventDueDate } from '../utils/common';
 
-function createEventListItemTemplate(point) {
+function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
@@ -10,8 +11,8 @@ function createEventListItemTemplate(point) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const destinations = point.tripDestinations.find((item) => item.id === destination);
-  const offersType = point.offersByType.find((offer) => offer.type === type);
+  const destinations = tripDestinations.find((item) => item.id === destination);
+  const offersType = tripTypes.find((offer) => offer.type === type);
   const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
   const offersList = () => {
@@ -39,7 +40,7 @@ function createEventListItemTemplate(point) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinations.name}</h3>
+        <h3 class="event__title">${type} ${he.encode(destinations.name)}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>
@@ -64,17 +65,21 @@ function createEventListItemTemplate(point) {
 
 export default class EventListItemView extends AbstractView {
   #point = null;
+  #tripDestinations = null;
+  #tripTypes = null;
   #handleEditClick = null;
 
-  constructor({ point, onEditClick }) {
+  constructor({ point, tripDestinations, tripTypes, onEditClick }) {
     super();
     this.#point = point;
+    this.#tripDestinations = tripDestinations;
+    this.#tripTypes = tripTypes;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
   }
 
   get template() {
-    return createEventListItemTemplate(this.#point);
+    return createEventListItemTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
   }
 
   #editBtnHandler = (evt) => {

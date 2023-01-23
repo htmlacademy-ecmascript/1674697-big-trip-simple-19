@@ -1,7 +1,8 @@
-import { render, replace, remove } from '../framework/render.js';
-import {isEscapeKey} from '../utils/common';
+import { render, replace, remove } from '../framework/render';
+import { isDatesEqual, isEscapeKey } from '../utils/common';
 import EventListItemView from '../view/event-list-item-view';
 import FormEditEventView from '../view/form-edit-event-view';
+import { UpdateType, UserAction } from '../utils/const';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -17,10 +18,14 @@ export default class PointPresenter {
   #pointEditComponent = null;
 
   #point = null;
+  #destinations = null;
+  #offers = null;
   #mode = Mode.DEFAULT;
 
-  constructor({ pointListContainer, onDataChange, onModeChange }) {
+  constructor({ pointListContainer, offers, destinations, onDataChange, onModeChange }) {
     this.#pointListContainer = pointListContainer;
+    this.#offers = offers;
+    this.#destinations = destinations;
     this.#handleDataChange = onDataChange;
     this.#handleModeChange = onModeChange;
   }
@@ -33,10 +38,14 @@ export default class PointPresenter {
 
     this.#pointComponent = new EventListItemView({
       point: this.#point,
+      tripTypes: this.#offers,
+      tripDestinations: this.#destinations,
       onEditClick: this.#handleEditClick,
     });
     this.#pointEditComponent = new FormEditEventView({
       point: this.#point,
+      tripTypes: this.#offers,
+      tripDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
       onEditClick: this.#handleCloseClick,
       onDeleteClick: this.#handleDeleteClick,
@@ -97,15 +106,28 @@ export default class PointPresenter {
     this.#replacePointToForm();
   };
 
-  #handleFormSubmit = (point) => {
-    this.#handleDataChange(point);
+  #handleFormSubmit = (update) => {
+    const isMinorUpdate = isDatesEqual(this.#point.dateFrom, update.dateFrom);
+
+    this.#handleDataChange(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.PATCH : UpdateType.MINOR,
+      update,
+    );
     this.#replaceFormToPoint();
   };
 
   #handleCloseClick = () => {
     this.#pointEditComponent.reset(this.#point);
+
     this.#replaceFormToPoint();
   };
 
-  #handleDeleteClick = () => { };
+  #handleDeleteClick = (point) => {
+    this.#handleDataChange(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
+  };
 }
