@@ -1,11 +1,13 @@
-import { getRandomPoint } from '../mock/point';
-import { getRandomInteger } from '../mock/utils';
 import Observable from '../framework/observable';
 
-const TASK_COUNT = 10;
-
 export default class PointsModel extends Observable {
-  #points = Array.from({ length: getRandomInteger(0, TASK_COUNT) }, getRandomPoint);
+  #pointsApiService = null;
+  #points = [];
+
+  constructor({ pointsApiService }) {
+    super();
+    this.#pointsApiService = pointsApiService;
+  }
 
   get points() {
     return this.#points;
