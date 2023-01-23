@@ -54,3 +54,6 @@ render(newPointButtonComponent, siteHeaderElement);
 
 filterPresenter.init();
 eventsPresenter.init();
+pointsModel.init();
+offersModel.init();
+destinationsModel.init();

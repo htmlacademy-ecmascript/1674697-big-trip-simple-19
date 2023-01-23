@@ -39,6 +39,8 @@ const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+  INIT: 'INIT',
+  ERROR_LOADING: 'ERROR_LOADING',
 };
 
 export { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION, TYPES, Message, FilterType, SortType, UserAction, UpdateType };
