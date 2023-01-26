@@ -58,8 +58,10 @@ render(newPointButtonComponent, siteHeaderElement);
 
 filterPresenter.init();
 eventsPresenter.init();
-pointsModel.init().finally(() => {
-  render(newPointButtonComponent, siteHeaderElement);
-});
-offersModel.init();
-destinationsModel.init();
+Promise.all([
+  pointsModel.init(),
+  offersModel.init(),
+  destinationsModel.init()])
+  .then(() => {
+    render(newPointButtonComponent, siteHeaderElement);
+  }).catch(() => { });

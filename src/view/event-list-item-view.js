@@ -14,7 +14,7 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const destinations = tripDestinations.find((item) => item.id === destination);
   const offersType = tripTypes.find((offer) => offer.type === type);
   // const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
-  const offersChecked = offersType.offers.filter((offer) => offer.id === id);
+  const offersChecked = offersType.filter((offer) => offer.id === id).offers;
 
   const offersList = () => {
     if (!offersChecked.length) {
