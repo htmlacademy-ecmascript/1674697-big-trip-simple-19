@@ -5,6 +5,7 @@ import { sortByPrice, sortByDay } from '../utils/sort';
 import SortView from '../view/sort-view';
 import EventListView from '../view/event-list-view';
 import EventsEmptyView from '../view/events-empty-view';
+import LoadingView from '../view/loading-view';
 import PointPresenter from './point-presenter';
 import NewPointPresenter from './new-point-presenter';
 
@@ -19,9 +20,12 @@ export default class EventsPresenter {
 
   #sortComponent = null;
   #eventsComponent = new EventListView();
+  #loadingComponent = new LoadingView();
   #noPointComponent = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.ALL;
+  #isLoading = true;
+  #isError = false;
 
   constructor({ eventListContainer, pointsModel, filterModel, offersModel, destinationsModel, onNewPointDestroy }) {
     this.#eventsContainer = eventListContainer;
@@ -111,6 +115,17 @@ export default class EventsPresenter {
         break;
       case UpdateType.MAJOR:
         this.#clearEvents({ resetSortType: true });
+        this.#renderEvents();
+        break;
+
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#loadingComponent);
+        this.#renderEvents();
+        break;
+      case UpdateType.ERROR:
+        this.#isError = true;
+        remove(this.#loadingComponent);
         this.#renderEvents();
         break;
     }

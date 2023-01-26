@@ -6,14 +6,24 @@ import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
 import OffersModel from './model/offers-model';
 import DestinationsModel from './model/destinations-model';
+import PointsApiService from './points-api-service';
+
+const AUTHORIZATION = 'Basic aSuGg42IWeHhas13';
+const END_POINT = 'https://19.ecmascript.pages.academy/big-trip-simple';
 
 const siteHeaderElement = document.querySelector('.trip-main');
 const filterContainerElement = document.querySelector('.trip-controls__filters');
 const tripEventsElement = document.querySelector('.trip-events');
 
-const pointsModel = new PointsModel();
-const offersModel = new OffersModel();
-const destinationsModel = new DestinationsModel();
+const pointsModel = new PointsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+const offersModel = new OffersModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
+const destinationsModel = new DestinationsModel({
+  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
+});
 const filterModel = new FilterModel();
 
 const eventsPresenter = new EventsPresenter({
@@ -48,3 +58,10 @@ render(newPointButtonComponent, siteHeaderElement);
 
 filterPresenter.init();
 eventsPresenter.init();
+Promise.all([
+  pointsModel.init(),
+  offersModel.init(),
+  destinationsModel.init()])
+  .then(() => {
+    render(newPointButtonComponent, siteHeaderElement);
+  }).catch(() => { });
