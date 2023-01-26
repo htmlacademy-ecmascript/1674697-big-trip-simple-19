@@ -13,11 +13,11 @@ export default class DestinationsModel extends Observable {
   async init() {
     try {
       this.#destinations = await this.#pointsApiService.offers;
+      this._notify(UpdateType.INIT);
     } catch (err) {
-      this.#destinations = [];
+      this._notify(UpdateType.ERROR);
+      throw new Error('Error loading data from server');
     }
-
-    this._notify(UpdateType.INIT);
   }
 
   get destinations() {

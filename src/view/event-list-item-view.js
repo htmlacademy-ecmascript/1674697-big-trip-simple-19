@@ -3,7 +3,7 @@ import AbstractView from '../framework/view/abstract-view';
 import { humanizeEventDueDate } from '../utils/common';
 
 function createEventListItemTemplate(point, tripDestinations, tripTypes) {
-  const { basePrice, destination, type, offers, dateFrom, dateTo } = point;
+  const { basePrice, destination, type, dateFrom, dateTo, id } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
   const timeStart = humanizeEventDueDate(dateFrom, 'HH:mm');
@@ -13,7 +13,8 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
 
   const destinations = tripDestinations.find((item) => item.id === destination);
   const offersType = tripTypes.find((offer) => offer.type === type);
-  const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
+  // const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
+  const offersChecked = offersType.offers.filter((offer) => offer.id === id);
 
   const offersList = () => {
     if (!offersChecked.length) {

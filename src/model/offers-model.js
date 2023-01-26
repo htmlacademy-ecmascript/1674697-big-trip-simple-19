@@ -13,11 +13,11 @@ export default class OffersModel extends Observable {
   async init() {
     try {
       this.#offers = await this.#pointsApiService.offers;
+      this._notify(UpdateType.INIT);
     } catch (err) {
-      this.#offers = [];
+      this._notify(UpdateType.ERROR);
+      throw new Error('Error loading data from server');
     }
-
-    this._notify(UpdateType.INIT);
   }
 
   get offers() {
