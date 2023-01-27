@@ -1,6 +1,5 @@
 import { remove, render, RenderPosition } from '../framework/render';
 import FormEditEventView from '../view/form-edit-event-view';
-import { nanoid } from 'nanoid';
 import { UserAction, UpdateType } from '../utils/const';
 import { isEscapeKey } from '../utils/common';
 
@@ -26,7 +25,6 @@ export default class NewPointPresenter {
     }
 
     this.#pointEditComponent = new FormEditEventView({
-      point: undefined,
       tripTypes: this.#offers,
       tripDestinations: this.#destinations,
       onFormSubmit: this.#handleFormSubmit,
@@ -51,13 +49,30 @@ export default class NewPointPresenter {
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   }
 
+  setSaving() {
+    this.#pointEditComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this.#pointEditComponent.updateElement({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
+      });
+    };
+
+    this.#pointEditComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (point) => {
     this.#handleDataChange(
       UserAction.ADD_POINT,
       UpdateType.MINOR,
-      // Пока у нас нет сервера, который бы после сохранения
-      // выдывал честный id задачи, нам нужно позаботиться об этом самим
-      { id: nanoid(), ...point },
+      point,
     );
     this.destroy();
   };
