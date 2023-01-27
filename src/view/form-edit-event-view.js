@@ -8,7 +8,7 @@ import { humanizeEventDueDate, getOffersId } from '../utils/common';
 import { TYPES } from '../utils/const';
 
 const BLANK_POINT = {
-  basePrice: 1,
+  basePrice: '',
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
   destination: -1,
@@ -77,19 +77,14 @@ const createPointDestinationTemplate = (data, tripDestinations) => {
   `);
 };
 
-const createPointEditInfoTemplate = (data, tripDestinations, tripTypes) => {
-  if (getOffersId(data, tripTypes).length === 0 && data.destination === -1) {
-    return '';
-  }
-  return (`
+const createPointEditInfoTemplate = (data, tripDestinations, tripTypes) => (`
       <section class="event__details">
-        ${(getOffersId(data, tripTypes).length > 0) ? `${createOffersTemplate(data, tripTypes)}` : ''}
+        ${data.offers ? `${createOffersTemplate(data, tripTypes)}` : ''}
         ${(data.destination !== -1) ? `${createPointDestinationTemplate(data, tripDestinations)}` : ''}
       </section>
     `);
-};
 
-function createFormEditEventTemplate(data = BLANK_POINT, tripTypes, tripDestinations) {
+function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
   const { basePrice, type, dateFrom, dateTo, isDisabled, isSaving, isDeleting } = data;
   const isNewPoint = !('id' in data);
 
@@ -97,9 +92,12 @@ function createFormEditEventTemplate(data = BLANK_POINT, tripTypes, tripDestinat
   const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
   const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
 
+  let isSubmitDisabled = true;
   let destName = '';
   if (data.destination !== -1) {
     destName = tripDestinations.find((item) => item.id === data.destination);
+
+    isSubmitDisabled = false;
   }
 
   const createCloseButtonTemplate = () =>
@@ -152,8 +150,8 @@ function createFormEditEventTemplate(data = BLANK_POINT, tripTypes, tripDestinat
             <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice} ${isDisabled ? 'disabled' : ''}">
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
-          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : 'Delete'}${isDeleting ? 'Deleting...' : 'Delete'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
           ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
         ${createPointEditInfoTemplate(data, tripDestinations, tripTypes)}
@@ -244,8 +242,11 @@ export default class FormEditEventView extends AbstractStatefulView {
     evt.preventDefault();
 
     const price = Number(evt.target.value);
-    evt.target.value = isNaN(price) ? this._state.basePrice : price;
-    this._setState({ basePrice: evt.target.value });
+    if (isNaN(price)) {
+      evt.target.value = this._state.basePrice;
+    } else {
+      this._state.basePrice = price;
+    }
   };
 
   #dateFromChangeHandler = ([userDate]) => {
