@@ -14,12 +14,12 @@ export default class PointsApiService extends ApiService {
   }
 
   get offers() {
-    return this._load({url: 'offers'})
+    return this._load({ url: 'offers' })
       .then(ApiService.parseResponse);
   }
 
   get destinations() {
-    return this._load({url: 'destinations'})
+    return this._load({ url: 'destinations' })
       .then(ApiService.parseResponse);
   }
 

@@ -128,7 +128,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
             <label class="event__label  event__type-output" for="event-destination-${data.id}">
             ${type}
             </label>
-            <input class="event__input  event__input--destination" id="event-destination-${data.id}" type="text" name="event-destination" value="${destName ? he.encode(destName.name) : '' }" list="destination-list-${data.id}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--destination" id="event-destination-${data.id}" type="text" name="event-destination" value="${destName ? he.encode(destName.name) : ''}" list="destination-list-${data.id}" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${data.id}">
               ${cities}
             </datalist>

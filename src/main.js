@@ -4,8 +4,6 @@ import EventsPresenter from './presenter/events-presenter.js';
 import FilterPresenter from './presenter/filter-presenter';
 import PointsModel from './model/points-model.js';
 import FilterModel from './model/filter-model.js';
-import OffersModel from './model/offers-model';
-import DestinationsModel from './model/destinations-model';
 import PointsApiService from './points-api-service';
 
 const AUTHORIZATION = 'Basic aSuGg42IWeHhas13';
@@ -18,20 +16,13 @@ const tripEventsElement = document.querySelector('.trip-events');
 const pointsModel = new PointsModel({
   pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
 });
-const offersModel = new OffersModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
-const destinationsModel = new DestinationsModel({
-  pointsApiService: new PointsApiService(END_POINT, AUTHORIZATION)
-});
+
 const filterModel = new FilterModel();
 
 const eventsPresenter = new EventsPresenter({
   eventListContainer: tripEventsElement,
   pointsModel,
   filterModel,
-  offersModel,
-  destinationsModel,
   onNewPointDestroy: handleNewPointFormClose,
 });
 
@@ -55,13 +46,11 @@ const filterPresenter = new FilterPresenter({
 });
 
 render(newPointButtonComponent, siteHeaderElement);
+pointsModel.init().finally(() => {
+  if (pointsModel.points.length) {
+    newPointButtonComponent.element.disabled = false;
+  }
+});
 
 filterPresenter.init();
 eventsPresenter.init();
-Promise.all([
-  pointsModel.init(),
-  offersModel.init(),
-  destinationsModel.init()])
-  .then(() => {
-    render(newPointButtonComponent, siteHeaderElement);
-  }).catch(() => { });
