@@ -1,9 +1,8 @@
-import he from 'he';
 import AbstractView from '../framework/view/abstract-view';
 import { humanizeEventDueDate } from '../utils/common';
 
-function createEventListItemTemplate(point, tripDestinations, tripTypes) {
-  const { basePrice, destination, type, dateFrom, dateTo, id } = point;
+function createEventListItemTemplate(point, destinations, tripOffers) {
+  const { basePrice, type, dateFrom, dateTo, destination, offers } = point;
 
   const date = humanizeEventDueDate(dateFrom, 'MMM DD');
   const timeStart = humanizeEventDueDate(dateFrom, 'HH:mm');
@@ -11,26 +10,24 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
   const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
   const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
-  const destinations = tripDestinations.find((item) => item.id === destination);
-  const offersType = tripTypes.find((offer) => offer.type === type);
-  // const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
-  const offersChecked = offersType.filter((offer) => offer.id === id).offers;
+  const destinationName = destinations.find((item) => item.id === destination);
+  const offersType = tripOffers.find((offer) => offer.type === type);
+  const offersChecked = offersType.offers.filter((offer) => offers.includes(offer.id));
 
-  const offersList = () => {
-    if (!offersChecked.length) {
+  const createOffersList = () => {
+    if (point.offers.length === 0) {
       return (
         `<li class="event__offer">
           <span class="event__offer-title">No additional offers</span>
         </li>`
       );
     } else {
-      const offersCheckedTemplate = offersChecked.map((offer) =>
+      return offersChecked.map((offer) =>
         `<li class="event__offer">
           <span class="event__offer-title">${offer.title}</span>
           &plus;&euro;&nbsp;
           <span class="event__offer-price">${offer.price}</span>
         </li>`).join('');
-      return offersCheckedTemplate;
     }
   };
 
@@ -41,7 +38,7 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${he.encode(destinations.name)}</h3>
+        <h3 class="event__title">${type} ${destinationName ? destinationName.name : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
             <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>
@@ -54,7 +51,7 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">
-          ${offersList()}
+          ${createOffersList()}
         </ul>
         <button class="event__rollup-btn" type="button">
           <span class="visually-hidden">Open event</span>
@@ -66,21 +63,21 @@ function createEventListItemTemplate(point, tripDestinations, tripTypes) {
 
 export default class EventListItemView extends AbstractView {
   #point = null;
-  #tripDestinations = null;
-  #tripTypes = null;
+  #destinations = null;
+  #offers = null;
   #handleEditClick = null;
 
-  constructor({ point, tripDestinations, tripTypes, onEditClick }) {
+  constructor({ point, destinations, offers, onEditClick }) {
     super();
     this.#point = point;
-    this.#tripDestinations = tripDestinations;
-    this.#tripTypes = tripTypes;
+    this.#destinations = destinations;
+    this.#offers = offers;
     this.#handleEditClick = onEditClick;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editBtnHandler);
   }
 
   get template() {
-    return createEventListItemTemplate(this.#point, this.#tripDestinations, this.#tripTypes);
+    return createEventListItemTemplate(this.#point, this.#destinations, this.#offers);
   }
 
   #editBtnHandler = (evt) => {
