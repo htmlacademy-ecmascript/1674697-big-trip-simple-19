@@ -136,10 +136,10 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${data.id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStart} ${isDisabled ? 'disabled' : ''}">
+            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStart}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${data.id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEnd} ${isDisabled ? 'disabled' : ''}">
+            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEnd}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -147,7 +147,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice} ${isDisabled ? 'disabled' : ''}">
+            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
