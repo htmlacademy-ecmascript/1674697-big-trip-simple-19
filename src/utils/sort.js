@@ -21,6 +21,7 @@ function sortByPrice(pointA, pointB) {
 
   return weight ?? pointB.basePrice - pointA.basePrice;
 }
+
 function sortByDay(pointA, pointB) {
   const weight = getWeightForNullParam(pointA.dateFrom, pointB.dateFrom);
 

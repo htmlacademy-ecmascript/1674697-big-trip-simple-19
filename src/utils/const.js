@@ -1,7 +1,3 @@
-const HOURS_GAP = 24;
-const MIN_EVENT_DURATION = 60; // 1 час
-const MAX_EVENT_DURATION = 10080; // 7 дней в часах
-
 const TYPES = [
   'taxi',
   'bus',
@@ -43,4 +39,4 @@ const UpdateType = {
   ERROR: 'ERROR',
 };
 
-export { HOURS_GAP, MIN_EVENT_DURATION, MAX_EVENT_DURATION, TYPES, Message, FilterType, SortType, UserAction, UpdateType };
+export { TYPES, Message, FilterType, SortType, UserAction, UpdateType };

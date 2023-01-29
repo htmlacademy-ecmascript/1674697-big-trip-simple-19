@@ -45,11 +45,8 @@ const filterPresenter = new FilterPresenter({
   pointsModel
 });
 
-render(newPointButtonComponent, siteHeaderElement);
 pointsModel.init().finally(() => {
-  if (pointsModel.points.length) {
-    newPointButtonComponent.element.disabled = false;
-  }
+  render(newPointButtonComponent, siteHeaderElement);
 });
 
 filterPresenter.init();
