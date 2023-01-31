@@ -69,6 +69,11 @@ export default class EventsPresenter {
   }
 
   createPoint() {
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      render(this.#eventsComponent, this.#eventsContainer);
+    }
+
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     this.#newPointPresenter.init();

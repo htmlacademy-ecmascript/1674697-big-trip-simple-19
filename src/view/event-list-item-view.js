@@ -1,14 +1,9 @@
 import AbstractView from '../framework/view/abstract-view';
-import { humanizeEventDueDate } from '../utils/common';
+import dayjs from 'dayjs';
+import { formatDate, formatTime } from '../utils/common';
 
 function createEventListItemTemplate(point, destinations, tripOffers) {
   const { basePrice, type, dateFrom, dateTo, destination, offers } = point;
-
-  const date = humanizeEventDueDate(dateFrom, 'MMM DD');
-  const timeStart = humanizeEventDueDate(dateFrom, 'HH:mm');
-  const timeEnd = humanizeEventDueDate(dateTo, 'HH:mm');
-  const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
-  const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
   const destinationName = destinations.find((item) => item.id === destination);
   const offersType = tripOffers.find((offer) => offer.type === type);
@@ -34,16 +29,16 @@ function createEventListItemTemplate(point, destinations, tripOffers) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${timeStartInDateTime}">${date}</time>
+        <time class="event__date" datetime=${formatDate(dateFrom)}>${dayjs(dateFrom).format('MMM D')}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
         <h3 class="event__title">${type} ${destinationName ? destinationName.name : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>
+            <time class="event__start-time" datetime=${formatDate(dateFrom)}T${formatTime(dateFrom)}>${formatTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${timeEndInDateTime}">${timeEnd}</time>
+            <time class="event__end-time" datetime=${formatDate(dateTo)}T${formatTime(dateTo)}>${formatTime(dateTo)}</time>
           </p>
         </div>
         <p class="event__price">

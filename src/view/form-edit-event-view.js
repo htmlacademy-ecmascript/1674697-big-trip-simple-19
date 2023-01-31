@@ -4,8 +4,8 @@ import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { humanizeEventDueDate, getOffersId } from '../utils/common';
 import { TYPES } from '../utils/const';
+import { formatFormDate, getOffersId } from '../utils/common';
 
 const BLANK_POINT = {
   basePrice: '',
@@ -16,6 +16,8 @@ const BLANK_POINT = {
   type: TYPES[0],
 };
 
+const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+
 const createTripTypeTemplate = (data) =>
   TYPES.map((eventType, index) => {
     const currentType = eventType.toLowerCase();
@@ -23,7 +25,7 @@ const createTripTypeTemplate = (data) =>
 
     return `<div class="event__type-item">
         <input id="event-type-${currentType}-${index}" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${currentType}" ${isChecked ? 'checked' : ''}>
-        <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-${index}">${eventType}</label>
+        <label class="event__type-label  event__type-label--${currentType}" for="event-type-${currentType}-${index}">${POINT_TYPES[index]}</label>
       </div>`;
   }).join('');
 
@@ -88,9 +90,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
   const { basePrice, type, dateFrom, dateTo, isDisabled, isSaving, isDeleting } = data;
   const isNewPoint = !('id' in data);
 
-  const dateStart = humanizeEventDueDate(dateFrom, 'DD/MM/YY HH:mm');
-  const dateEnd = humanizeEventDueDate(dateTo, 'DD/MM/YY HH:mm');
-  const cities = tripDestinations.map((item) => `<option value="${item.name}"></option>`).join('');
+  const cities = tripDestinations.map((item) => `<option value="${he.encode(item.name)}"></option>`).join('');
 
   let isSubmitDisabled = true;
   let destName = '';
@@ -136,10 +136,10 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
 
           <div class="event__field-group  event__field-group--time">
             <label class="visually-hidden" for="event-start-time-${data.id}">From</label>
-            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${dateStart}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--time" id="event-start-time" type="text" name="event-start-time" value="${formatFormDate(dateFrom)}" ${isDisabled ? 'disabled' : ''}>
             &mdash;
             <label class="visually-hidden" for="event-end-time-${data.id}">To</label>
-            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${dateEnd}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--time" id="event-end-time" type="text" name="event-end-time" value="${formatFormDate(dateTo)}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <div class="event__field-group  event__field-group--price">
@@ -147,7 +147,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${data.basePrice ? he.encode(String(basePrice)) : ''}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
           <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
@@ -195,7 +195,8 @@ export default class FormEditEventView extends AbstractStatefulView {
     }
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#destinationChangeHandler);
 
-    this.#setDatepicker();
+    this.#setDateFromPicker();
+    this.#setDateToPicker();
   }
 
   get template() {
@@ -261,7 +262,7 @@ export default class FormEditEventView extends AbstractStatefulView {
     });
   };
 
-  #setDatepicker() {
+  #setDateFromPicker = () => {
     this.#datepickerFrom = flatpickr(
       this.element.querySelector('#event-start-time'),
       {
@@ -269,10 +270,16 @@ export default class FormEditEventView extends AbstractStatefulView {
         enableTime: true,
         // eslint-disable-next-line camelcase
         time_24hr: true,
-        defaultDate: this._state.dateFrom,
-        onChange: this.#dateFromChangeHandler,
+        // defaultDate: this._state.dateFrom,
+        defaultHour: 14,
+        defaultMinute: 0,
+        maxDate: this._state.dateTo,
+        onChange: this.#dateFromChangeHandler
       },
     );
+  };
+
+  #setDateToPicker = () => {
     this.#datepickerTo = flatpickr(
       this.element.querySelector('#event-end-time'),
       {
@@ -280,15 +287,35 @@ export default class FormEditEventView extends AbstractStatefulView {
         enableTime: true,
         // eslint-disable-next-line camelcase
         time_24hr: true,
-        defaultDate: this._state.dateTo,
+        // defaultDate: this._state.dateTo,
+        defaultHour: 17,
+        defaultMinute: 0,
         minDate: this._state.dateFrom,
-        onChange: this.#dateToChangeHandler,
+        onChange: this.#dateToChangeHandler
       },
     );
-  }
+  };
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+
+    const destinationInput = this.element.querySelector('.event__input--destination');
+    const submitButton = this.element.querySelector('.event__save-btn');
+    const priceInput = this.element.querySelector('.event__input--price');
+
+    if (priceInput.value < 1) {
+      submitButton.disabled = true;
+      return;
+    }
+
+    if (destinationInput.value === '') {
+      submitButton.disabled = true;
+      return;
+    }
+    if (this._state.dateFrom >= this._state.dateTo) {
+      submitButton.disabled = true;
+      return;
+    }
     this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
   };
 
