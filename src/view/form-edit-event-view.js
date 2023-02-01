@@ -270,9 +270,7 @@ export default class FormEditEventView extends AbstractStatefulView {
         enableTime: true,
         // eslint-disable-next-line camelcase
         time_24hr: true,
-        // defaultDate: this._state.dateFrom,
-        defaultHour: 14,
-        defaultMinute: 0,
+        defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo,
         onChange: this.#dateFromChangeHandler
       },
@@ -287,9 +285,7 @@ export default class FormEditEventView extends AbstractStatefulView {
         enableTime: true,
         // eslint-disable-next-line camelcase
         time_24hr: true,
-        // defaultDate: this._state.dateTo,
-        defaultHour: 17,
-        defaultMinute: 0,
+        defaultDate: this._state.dateTo,
         minDate: this._state.dateFrom,
         onChange: this.#dateToChangeHandler
       },
