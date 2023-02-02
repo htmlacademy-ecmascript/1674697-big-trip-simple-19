@@ -93,8 +93,8 @@ export default class PointsModel extends Observable {
     const adaptedPoint = {
       ...point,
       basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : dayjs().toISOString(),
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : dayjs('2024-01-01 13:00').toISOString()
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : dayjs('2021-01-01 12:00').toISOString(),
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : dayjs('2024-01-01 15:00').toISOString()
     };
 
     delete adaptedPoint['base_price'];
