@@ -69,7 +69,7 @@ const createPointDestinationTemplate = (data, tripDestinations) => {
 
 const createPointEditInfoTemplate = (data, tripDestinations, tripTypes) => (`
       <section class="event__details">
-        ${data.offers ? `${createOffersTemplate(data, tripTypes)}` : ''}
+        ${(getOffersId(data, tripTypes).length > 0) ? `${createOffersTemplate(data, tripTypes)}` : ''}
         ${(data.destination !== -1) ? `${createPointDestinationTemplate(data, tripDestinations)}` : ''}
       </section>
     `);
@@ -80,12 +80,10 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
 
   const cities = tripDestinations.map((item) => `<option value="${he.encode(item.name)}"></option>`).join('');
 
-  let isSubmitDisabled = true;
+  const isSubmitDisabled = data.destination && basePrice;
   let destName = '';
   if (data.destination !== -1) {
     destName = tripDestinations.find((item) => item.id === data.destination);
-
-    isSubmitDisabled = false;
   }
 
   const createCloseButtonTemplate = () =>
@@ -138,7 +136,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
             <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice ? he.encode((basePrice).toString()) : ''}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? 'disabled' : ''} ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? '' : 'disabled'} ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
           <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
           ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
@@ -178,6 +176,8 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
+    // this.element.querySelectorAll('.event__offer-selector input')
+    //   .forEach((offer) => offer.addEventListener('change', this.#offerChangeHandler));
     if (getOffersId(this._state, this.#tripTypes).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
@@ -230,12 +230,15 @@ export default class FormEditEventView extends AbstractStatefulView {
   #priceChangeHandler = (evt) => {
     evt.preventDefault();
 
-    const price = Number(evt.target.value);
-    if (isNaN(price)) {
-      evt.target.value = this._state.basePrice;
-    } else {
-      this._state.basePrice = price;
+    let price = Number(evt.target.value);
+    if (price < 0) {
+      price = Math.abs(price);
     }
+    evt.target.value = isNaN(price) ? this._state.basePrice : price;
+
+    this.updateElement({
+      basePrice: +evt.target.value
+    });
   };
 
   #dateFromChangeHandler = ([userDate]) => {

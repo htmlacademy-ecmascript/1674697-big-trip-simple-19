@@ -15,7 +15,7 @@ const TYPES = [
 const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
 const BLANK_POINT = {
-  basePrice: '1',
+  basePrice: '',
   dateFrom: dayjs().toDate(),
   dateTo: dayjs().toDate(),
   destination: -1,
