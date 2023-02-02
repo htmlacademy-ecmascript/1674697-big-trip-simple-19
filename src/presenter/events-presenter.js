@@ -150,9 +150,9 @@ export default class EventsPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.#createNewPointPresenter();
         remove(this.#loadingComponent);
         this.#renderEvents();
+        this.#createNewPointPresenter();
         break;
     }
   };
@@ -208,9 +208,9 @@ export default class EventsPresenter {
   }
 
   #clearEvents({ resetSortType = false } = {}) {
-    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
+    this.#newPointPresenter.destroy();
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);

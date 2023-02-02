@@ -1,22 +1,10 @@
-import dayjs from 'dayjs';
 import he from 'he';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 
 import AbstractStatefulView from '../framework/view/abstract-stateful-view';
-import { TYPES } from '../utils/const';
+import { TYPES, POINT_TYPES, BLANK_POINT } from '../utils/const';
 import { formatFormDate, getOffersId } from '../utils/common';
-
-const BLANK_POINT = {
-  basePrice: '',
-  dateFrom: dayjs().toDate(),
-  dateTo: dayjs().toDate(),
-  destination: -1,
-  offers: [],
-  type: TYPES[0],
-};
-
-const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
 
 const createTripTypeTemplate = (data) =>
   TYPES.map((eventType, index) => {
@@ -147,10 +135,10 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
               <span class="visually-hidden">Price</span>
               &euro;
             </label>
-            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${data.basePrice ? he.encode(String(basePrice)) : ''}" ${isDisabled ? 'disabled' : ''}>
+            <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice ? he.encode((basePrice).toString()) : ''}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? 'disabled' : ''} ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
           <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
           ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
@@ -189,7 +177,7 @@ export default class FormEditEventView extends AbstractStatefulView {
     }
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
-    this.element.querySelector('.event__input--price').addEventListener('input', this.#priceChangeHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
     if (getOffersId(this._state, this.#tripTypes).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
@@ -268,11 +256,10 @@ export default class FormEditEventView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
         defaultDate: this._state.dateFrom,
         maxDate: this._state.dateTo,
-        onChange: this.#dateFromChangeHandler
+        onChange: this.#dateFromChangeHandler,
+        'time_24hr': true
       },
     );
   };
@@ -283,11 +270,10 @@ export default class FormEditEventView extends AbstractStatefulView {
       {
         dateFormat: 'd/m/y H:i',
         enableTime: true,
-        // eslint-disable-next-line camelcase
-        time_24hr: true,
         defaultDate: this._state.dateTo,
         minDate: this._state.dateFrom,
-        onChange: this.#dateToChangeHandler
+        onChange: this.#dateToChangeHandler,
+        'time_24hr': true
       },
     );
   };
@@ -295,23 +281,6 @@ export default class FormEditEventView extends AbstractStatefulView {
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
 
-    const destinationInput = this.element.querySelector('.event__input--destination');
-    const submitButton = this.element.querySelector('.event__save-btn');
-    const priceInput = this.element.querySelector('.event__input--price');
-
-    if (priceInput.value < 1) {
-      submitButton.disabled = true;
-      return;
-    }
-
-    if (destinationInput.value === '') {
-      submitButton.disabled = true;
-      return;
-    }
-    if (this._state.dateFrom >= this._state.dateTo) {
-      submitButton.disabled = true;
-      return;
-    }
     this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
   };
 
