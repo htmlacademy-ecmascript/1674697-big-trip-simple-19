@@ -283,12 +283,6 @@ export default class FormEditEventView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
-    const submitButton = this.element.querySelector('.event__save-btn');
-
-    if (this._state.dateFrom >= this._state.dateTo) {
-      submitButton.disabled = true;
-      return;
-    }
 
     this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
   };
