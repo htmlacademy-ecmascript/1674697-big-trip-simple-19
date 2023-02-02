@@ -23,11 +23,11 @@ const createOffersTemplate = (data, tripTypes) => {
     const offerName = offer.title.toLowerCase().replaceAll(' ', '-');
     return `
       <div class="event__offer-selector">
-        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-${offerName}" ${checked} data-offer-id="${offer.id}">
+        <input class="event__offer-checkbox  visually-hidden" id="event-offer-${index}" type="checkbox" name="event-offer-${he.encode(offerName)}" ${checked} data-offer-id="${offer.id}">
         <label class="event__offer-label" for="event-offer-${index}">
-          <span class="event__offer-title">${offer.title}</span>
+          <span class="event__offer-title">${he.encode(offer.title)}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
+          <span class="event__offer-price">${he.encode(offer.price.toString())}</span>
         </label>
       </div>`;
   }).join('');
@@ -61,7 +61,7 @@ const createPointDestinationTemplate = (data, tripDestinations) => {
   return (`
     <section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-      ${(destinations.description !== '') ? `<p class="event__destination-description">${destinations.description}</p>` : ''}
+      ${(destinations.description !== '') ? `<p class="event__destination-description">${he.encode(destinations.description)}</p>` : ''}
       ${createDestinationPictures(destinations.pictures)}
     </section>
   `);
@@ -112,7 +112,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
 
           <div class="event__field-group  event__field-group--destination">
             <label class="event__label  event__type-output" for="event-destination-${data.id}">
-            ${type}
+            ${he.encode(type)}
             </label>
             <input class="event__input  event__input--destination" id="event-destination-${data.id}" type="text" name="event-destination" value="${destName ? he.encode(destName.name) : ''}" list="destination-list-${data.id}" ${isDisabled ? 'disabled' : ''}>
             <datalist id="destination-list-${data.id}">
@@ -176,8 +176,6 @@ export default class FormEditEventView extends AbstractStatefulView {
     this.element.querySelector('.event__reset-btn').addEventListener('click', this.#deleteClickHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#typeChangeHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#priceChangeHandler);
-    // this.element.querySelectorAll('.event__offer-selector input')
-    //   .forEach((offer) => offer.addEventListener('change', this.#offerChangeHandler));
     if (getOffersId(this._state, this.#tripTypes).length > 0) {
       this.element.querySelector('.event__available-offers').addEventListener('change', this.#offerChangeHandler);
     }
