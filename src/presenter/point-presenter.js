@@ -1,5 +1,5 @@
 import { render, replace, remove } from '../framework/render';
-import { isDatesEqual, isEscapeKey } from '../utils/common';
+import { isDatesEqual, isEscapeKey, isPriceEqual } from '../utils/common';
 import EventListItemView from '../view/event-list-item-view';
 import FormEditEventView from '../view/form-edit-event-view';
 import { UpdateType, UserAction } from '../utils/const';
@@ -143,7 +143,9 @@ export default class PointPresenter {
   };
 
   #handleFormSubmit = (update) => {
-    const isMinorUpdate = isDatesEqual(this.#point.dateFrom, update.dateFrom);
+    const isMinorUpdate = !isDatesEqual(this.#point.dateFrom, update.dateFrom) ||
+      !isDatesEqual(this.#point.dateTo, update.dateTo) ||
+      !isPriceEqual(this.#point.basePrice, update.basePrice);
 
     this.#handleDataChange(
       UserAction.UPDATE_POINT,

@@ -1,4 +1,5 @@
 import Observable from '../framework/observable';
+import dayjs from 'dayjs';
 import { UpdateType } from '../utils/const';
 
 export default class PointsModel extends Observable {
@@ -92,8 +93,8 @@ export default class PointsModel extends Observable {
     const adaptedPoint = {
       ...point,
       basePrice: point['base_price'],
-      dateFrom: new Date(point['date_from']),
-      dateTo: new Date(point['date_to'])
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : dayjs().toISOString(),
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : dayjs('2024-01-01 13:00').toISOString()
     };
 
     delete adaptedPoint['base_price'];

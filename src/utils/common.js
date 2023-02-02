@@ -28,4 +28,8 @@ function isDatesEqual(dateA, dateB) {
   return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 }
 
-export { formatDate, formatTime, formatFormDate, isFuturePoint, isEscapeKey, getOffersId, isDatesEqual };
+function isPriceEqual(priceA, priceB) {
+  return (priceA === null && priceB === null) || (priceA === priceB);
+}
+
+export { formatDate, formatTime, formatFormDate, isFuturePoint, isEscapeKey, getOffersId, isDatesEqual, isPriceEqual };

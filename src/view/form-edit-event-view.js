@@ -80,10 +80,12 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
 
   const cities = tripDestinations.map((item) => `<option value="${he.encode(item.name)}"></option>`).join('');
 
-  const isSubmitDisabled = data.destination && basePrice;
+  let isSubmitDisabled = true;
   let destName = '';
+
   if (data.destination !== -1) {
     destName = tripDestinations.find((item) => item.id === data.destination);
+    isSubmitDisabled = false;
   }
 
   const createCloseButtonTemplate = () =>
@@ -136,7 +138,7 @@ function createFormEditEventTemplate(data, tripTypes, tripDestinations) {
             <input class="event__input  event__input--price" id="event-price-${data.id}" type="text" name="event-price" value="${basePrice ? he.encode((basePrice).toString()) : ''}" ${isDisabled ? 'disabled' : ''}>
           </div>
 
-          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? '' : 'disabled'} ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
+          <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
           <button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isNewPoint ? 'Cancel' : `${isDeleting ? 'Deleting...' : 'Delete'}`}</button>
           ${isNewPoint ? '' : createCloseButtonTemplate()}
         </header>
@@ -281,6 +283,12 @@ export default class FormEditEventView extends AbstractStatefulView {
 
   #formSubmitHandler = (evt) => {
     evt.preventDefault();
+    const submitButton = this.element.querySelector('.event__save-btn');
+
+    if (this._state.dateFrom >= this._state.dateTo) {
+      submitButton.disabled = true;
+      return;
+    }
 
     this.#handleFormSubmit(FormEditEventView.parseStateToPoint(this._state));
   };
