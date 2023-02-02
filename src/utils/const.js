@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const TYPES = [
   'taxi',
   'bus',
@@ -9,6 +11,17 @@ const TYPES = [
   'sightseeing',
   'restaurant',
 ];
+
+const POINT_TYPES = ['Taxi', 'Bus', 'Train', 'Ship', 'Drive', 'Flight', 'Check-in', 'Sightseeing', 'Restaurant'];
+
+const BLANK_POINT = {
+  basePrice: '',
+  dateFrom: dayjs().toDate(),
+  dateTo: dayjs().toDate(),
+  destination: -1,
+  offers: [],
+  type: TYPES[0],
+};
 
 const FilterType = {
   ALL: 'everything',
@@ -39,4 +52,4 @@ const UpdateType = {
   ERROR: 'ERROR',
 };
 
-export { TYPES, Message, FilterType, SortType, UserAction, UpdateType };
+export { TYPES, POINT_TYPES, BLANK_POINT, Message, FilterType, SortType, UserAction, UpdateType };

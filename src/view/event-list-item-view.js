@@ -1,14 +1,10 @@
 import AbstractView from '../framework/view/abstract-view';
-import { humanizeEventDueDate } from '../utils/common';
+import dayjs from 'dayjs';
+import he from 'he';
+import { formatDate, formatTime } from '../utils/common';
 
 function createEventListItemTemplate(point, destinations, tripOffers) {
   const { basePrice, type, dateFrom, dateTo, destination, offers } = point;
-
-  const date = humanizeEventDueDate(dateFrom, 'MMM DD');
-  const timeStart = humanizeEventDueDate(dateFrom, 'HH:mm');
-  const timeEnd = humanizeEventDueDate(dateTo, 'HH:mm');
-  const timeStartInDateTime = humanizeEventDueDate(dateFrom, 'YYYY-MM-DDTHH:mm');
-  const timeEndInDateTime = humanizeEventDueDate(dateTo, 'YYYY-MM-DDTHH:mm');
 
   const destinationName = destinations.find((item) => item.id === destination);
   const offersType = tripOffers.find((offer) => offer.type === type);
@@ -24,9 +20,9 @@ function createEventListItemTemplate(point, destinations, tripOffers) {
     } else {
       return offersChecked.map((offer) =>
         `<li class="event__offer">
-          <span class="event__offer-title">${offer.title}</span>
+          <span class="event__offer-title">${he.encode(offer.title)}</span>
           &plus;&euro;&nbsp;
-          <span class="event__offer-price">${offer.price}</span>
+          <span class="event__offer-price">${he.encode(offer.price.toString())}</span>
         </li>`).join('');
     }
   };
@@ -34,20 +30,20 @@ function createEventListItemTemplate(point, destinations, tripOffers) {
   return (
     `<li class="trip-events__item">
       <div class="event">
-        <time class="event__date" datetime="${timeStartInDateTime}">${date}</time>
+        <time class="event__date" datetime="${formatDate(dateFrom)}">${dayjs(dateFrom).format('MMM D')}</time>
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${type} ${destinationName ? destinationName.name : ''}</h3>
+        <h3 class="event__title">${type} ${destinationName ? he.encode(destinationName.name) : ''}</h3>
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${timeStartInDateTime}">${timeStart}</time>
+            <time class="event__start-time" datetime="${formatDate(dateFrom)}T${formatTime(dateFrom)}">${formatTime(dateFrom)}</time>
             &mdash;
-            <time class="event__end-time" datetime="${timeEndInDateTime}">${timeEnd}</time>
+            <time class="event__end-time" datetime="${formatDate(dateTo)}T${formatTime(dateTo)}">${formatTime(dateTo)}</time>
           </p>
         </div>
         <p class="event__price">
-          &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
+          &euro;&nbsp;<span class="event__price-value">${he.encode(basePrice.toString())}</span>
         </p>
         <h4 class="visually-hidden">Offers:</h4>
         <ul class="event__selected-offers">

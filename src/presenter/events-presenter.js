@@ -69,6 +69,11 @@ export default class EventsPresenter {
   }
 
   createPoint() {
+    if (this.#noPointComponent) {
+      remove(this.#noPointComponent);
+      render(this.#eventsComponent, this.#eventsContainer);
+    }
+
     this.#currentSortType = SortType.DAY;
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.ALL);
     this.#newPointPresenter.init();
@@ -145,9 +150,9 @@ export default class EventsPresenter {
         break;
       case UpdateType.INIT:
         this.#isLoading = false;
-        this.#createNewPointPresenter();
         remove(this.#loadingComponent);
         this.#renderEvents();
+        this.#createNewPointPresenter();
         break;
     }
   };
@@ -203,9 +208,9 @@ export default class EventsPresenter {
   }
 
   #clearEvents({ resetSortType = false } = {}) {
-    this.#newPointPresenter.destroy();
     this.#pointPresenter.forEach((presenter) => presenter.destroy());
     this.#pointPresenter.clear();
+    this.#newPointPresenter.destroy();
 
     remove(this.#sortComponent);
     remove(this.#loadingComponent);

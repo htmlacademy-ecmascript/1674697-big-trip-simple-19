@@ -1,7 +1,15 @@
 import dayjs from 'dayjs';
 
-function humanizeEventDueDate(dueDate, dateFormat) {
-  return dueDate ? dayjs(dueDate).format(dateFormat) : '';
+function formatDate(date) {
+  return dayjs(date).format('YYYY-MM-DD');
+}
+
+function formatTime(date) {
+  return dayjs(date).format('HH:mm');
+}
+
+function formatFormDate(date) {
+  return dayjs(date).format('DD/MM/YY HH:mm');
 }
 
 function isFuturePoint(dateFrom) {
@@ -20,4 +28,8 @@ function isDatesEqual(dateA, dateB) {
   return (dateA === null && dateB === null) || dayjs(dateA).isSame(dateB, 'D');
 }
 
-export { humanizeEventDueDate, isFuturePoint, isEscapeKey, getOffersId, isDatesEqual };
+function isPriceEqual(priceA, priceB) {
+  return (priceA === null && priceB === null) || (priceA === priceB);
+}
+
+export { formatDate, formatTime, formatFormDate, isFuturePoint, isEscapeKey, getOffersId, isDatesEqual, isPriceEqual };

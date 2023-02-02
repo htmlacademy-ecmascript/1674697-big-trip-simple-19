@@ -1,4 +1,5 @@
 import Observable from '../framework/observable';
+import dayjs from 'dayjs';
 import { UpdateType } from '../utils/const';
 
 export default class PointsModel extends Observable {
@@ -43,15 +44,11 @@ export default class PointsModel extends Observable {
   }
 
   async updatePoint(updateType, update) {
-    const index = this.#points.findIndex((point) => point.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Can\'t update unexisting point');
-    }
-
     try {
       const response = await this.#pointsApiService.updatePoint(update);
       const updatedPoint = this.#adaptToClient(response);
+
+      const index = this.#points.findIndex((point) => point.id === update.id);
       this.#points = [
         ...this.#points.slice(0, index),
         updatedPoint,
@@ -77,13 +74,8 @@ export default class PointsModel extends Observable {
   }
 
   async deletePoint(updateType, update) {
-    const index = this.#points.findIndex((point) => point.id === update.id);
-
-    if (index === -1) {
-      throw new Error('Can\'t delete unexisting point');
-    }
-
     try {
+      const index = this.#points.findIndex((point) => point.id === update.id);
       await this.#pointsApiService.deletePoint(update);
 
       this.#points = [
@@ -101,8 +93,8 @@ export default class PointsModel extends Observable {
     const adaptedPoint = {
       ...point,
       basePrice: point['base_price'],
-      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : point['date_from'],
-      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : point['date_to'],
+      dateFrom: point['date_from'] !== null ? new Date(point['date_from']) : dayjs().toISOString(),
+      dateTo: point['date_to'] !== null ? new Date(point['date_to']) : dayjs('2024-01-01 13:00').toISOString()
     };
 
     delete adaptedPoint['base_price'];
